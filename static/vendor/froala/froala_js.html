@@ -1,0 +1,17 @@
+{% load static %}
+<script type="text/javascript">
+	function getCookie(name){
+		var cookievalue=null;
+		if(document.cookie && document.cookie !=''){
+			var cookies=document.cookie.split(';');
+			for(var i=0;i<cookies.length;i++){
+				var cookie=$.trim(cookies[i]);
+				if(cookie.substring(0,name.length+1)==name+'='){
+					cookievalue=decodeURIComponent(cookie.substring(name.length+1))
+					break;
+				}
+			}
+		}
+	}
+</script>
+<script type="text/javascript" src="{% static "froala_editor/js/froala_editor.min.js" %}"></script>

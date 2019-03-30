@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<h1>Login</h1>
+
+<form method="post">
+	{% csrf_token %}
+	{% for form in form %}
+	<div class="form-group">
+		<label for="{{form.id_for_label}}" class="col-form-label">
+			{{form.label}}
+		</label>
+		{{form}}
+	</div>	
+	{% endfor %}
+	<button type="submit" class="btn btn-primary">Login</button>
+</form>
+<div class="border-top border-secondary mt-3">
+		Belum Punya Akun <a href="{% url "register" %}" class="text-primary">Sign Up</a>
+</div>
+{% endblock main_content %}

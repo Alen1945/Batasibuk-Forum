@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>
+      Batasibuk {% if title %}- {{title}}{% endif %}
+    </title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS and Base CSS -->
+    {% include "snippets/css.html" %}
+
+    <!-- coustum  CSS -->
+    {% block costum_css %}
+      
+    {% endblock costum_css %}
+      
+  </head>
+  <body>
+    {% include "snippets/navbar.html" %}
+    <div class="container">
+    {% block main_content %}
+      
+    {% endblock main_content %}
+    </div>
+    <!-- jQuery, Popper.js, Bootstrap JS, and Base.js  -->
+    {% include "snippets/js.html" %}
+
+    <!-- costum Js  -->
+    {% block costum_js %}
+      
+    {% endblock costum_js %}
+  </body>
+</html>

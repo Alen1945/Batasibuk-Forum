@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+
+{% block main_content %}
+	
+	<form method="post">
+		{% csrf_token %}
+		{% for form in form  %}
+		<div class="form-group">
+			<label for="{{form.id_for_label}}" class="col-form-label">{{form.label}}</label>
+			{{form}}
+			{% if form.errors %}
+				{% for error in form.errors %}
+					<small class="text-muted d-block"><span class="text-danger">*{{error}}</span></small>
+				{% endfor %}
+			{% else %}
+			{% endif %}
+		</div>
+		{% endfor %}
+	<button class="btn btn-primary" type="submit">Daftar</button>
+	</form>
+	<div class="border-top border-secondary mt-3">Punya akun <a href="{% url 'login' %}" class="text-primary">Masuk</a></div>
+{% endblock main_content %}
