@@ -1,6 +1,11 @@
 {% load static %}
 
-<script type="text/javascript" src="{% static "vendor/jquery.min.js" %}"></script>
+
 <script type="text/javascript" src="{% static "vendor/popper/popper.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendor/bootstrap/bootstrap.min.js" %}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('[data-toggle=navtooltip]').tooltip();
+	});
+</script>
 <script type="text/javascript" src="{% static "js/base.js" %}"></script>

@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'forum.apps.ForumConfig',
+    'batasibuk_forum.apps.BatasibukForumConfig',
     'account.apps.AccountConfig',
     'froala_editor',
     'django.contrib.admin',
@@ -126,6 +126,15 @@ os.path.join(BASE_DIR,'static')
 ]
 
 
+#media upload
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+
+
 # redirect_login
 LOGIN_URL='login'
 LOGIN_REDIRECT_URL='home'
+
+
+
+

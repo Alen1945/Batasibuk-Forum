@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,11 +12,19 @@
     <!-- Bootstrap CSS and Base CSS -->
     {% include "snippets/css.html" %}
 
+    <!-- Jquery -->
+    <script type="text/javascript" src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+
     <!-- coustum  CSS -->
     {% block costum_css %}
       
     {% endblock costum_css %}
       
+    <!-- coustum  Js in head -->
+    {% block costumhead_js %}
+        
+    {% endblock costumhead_js %}
+    
   </head>
   <body>
     {% include "snippets/navbar.html" %}
@@ -24,7 +33,7 @@
       
     {% endblock main_content %}
     </div>
-    <!-- jQuery, Popper.js, Bootstrap JS, and Base.js  -->
+    <!--Popper.js, Bootstrap JS, and Base.js  -->
     {% include "snippets/js.html" %}
 
     <!-- costum Js  -->
