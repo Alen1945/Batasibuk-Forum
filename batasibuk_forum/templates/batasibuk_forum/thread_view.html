@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block costum_css %}
+  
+{% endblock costum_css %}
+
+{% block costumhead_js %}
+	{{form.media}}
+{% endblock costumhead_js %}
+
+{% block main_content %}
+	<h4>{{thread.post_title}}</h4>
+	<p>author: {{thread.author}}</p>
+	<p>{{thread.body|safe}}</p>
+	<a href="javascript:void(0)" class="btn btn{% if not thread.user_up_vote %}-outline{% endif %}-success vote-post" data-id="{{thread.post_slug}}" data-cat='posts' data-action='up'>
+		{{thread.upvotes}} Tepuk Tangan 
+	</a>
+	
+	<a href='javascript:void(0)' class="btn btn{% if not thread.user_down_vote %}-outline{% endif %}-danger vote-post" data-id="{{thread.post_slug}}" data-cat='posts' data-action='down'>
+		{{thread.downvotes}} Flungku
+	</a>
+	
+	{% with comments.count as total_comments  %}
+	  <h5>{{total_comments}} comment{{total_comments|pluralize}}</h5>  
+	{% endwith %}
+
+	{% for c in comments  %}
+		<div>
+			<p>
+				comment by {{c.user}} at {{c.time}}
+			</p>
+			<p>{{c.body|safe}}</p>
+			<a href="javascript:void(0)" class="btn btn{% if not c.user_up_vote %}-outline{% endif %}-success vote-comment" data-id="{{c.id}}" data-cat='comments' data-action='up'>
+		{{c.upvotes}} Tepuk Tangan 
+			</a>
+
+			<a href='javascript:void(0)' class="btn btn{% if not c.user_down_vote %}-outline{% endif %}-danger vote-comment" data-id="{{c.id}}" data-cat='comments' data-action='down'>
+				{{c.downvotes}} Flungku
+			</a>
+			{% if c.replys %}
+				{% for reply in c.replys  %}
+					<p>
+					reply to {{c.user}} by {{reply.user}}
+					{{reply.body|safe}}
+					</p>
+				{% endfor %}
+				
+			{% endif %}
+		</div>
+		{%empty%}
+		<p>Tidak ada komentar</p>
+	{% endfor %}
+
+	<h5>Tambahkan komentar</h5>
+	<form method="post">
+		{% csrf_token %}
+		{{forms_comment.as_p}}
+		<button type="submit" class="btn btn-primary">Komentar</button>
+	</form>
+{% endblock main_content %}
+
+
+
+{% block costum_js %}
+	<script type="text/javascript">
+		function upvote(e){
+			data_id=e.attr('data-id')
+			data_cat=e.attr('data-cat')
+			
+			$.ajax({
+				type:'POST',
+				url:'/api/'+data_cat+'/'+data_id+'/upvote',
+				data:{
+					csrfmiddlewaretoken:'{{csrf_token}}',
+				},
+				data_type:'json',
+				success:function(data){
+					e.toggleClass('btn-outline-success')
+					e.toggleClass('btn-success')
+					e.html(data.upvotes+' Tepuk Tangan')
+					if(data.cancel=='down'){
+						btn_down=$('.vote-post[data-action="down"][data-id='+data_id+']')
+						btn_down.removeClass('btn-danger')
+						btn_down.addClass('btn-outline-danger')
+						btn_down.html(data.downvotes+' Flungku')
+					}
+				}
+			})
+		};
+
+		function downvote(e){
+			data_id=e.attr('data-id')
+			data_cat=e.attr('data-cat')
+			$.ajax({
+				type:'POST',
+				url:'/api/'+data_cat+'/'+data_id+'/downvote',
+				data:{
+					csrfmiddlewaretoken:'{{csrf_token}}',
+				},
+				success:function(data){
+					console.log('alen')
+					e.toggleClass('btn-outline-danger')
+					e.toggleClass('btn-danger')
+					e.html(data.downvotes+' Flungku')
+					if(data.cancel=='up'){
+						btn_down=$('.vote-post[data-action="up"][data-id='+data_id+']')
+						btn_down.removeClass('btn-success')
+						btn_down.addClass('btn-outline-success')
+						btn_down.html(data.upvotes+' Tepuk Tangan')
+					}
+				}
+			})
+		};
+
+		$('.vote-post').click(function(e){
+			e.preventDefault()
+			action=$(this).attr('data-action')
+			if (action=='up'){
+				upvote($(this))
+			}else if(action=='down'){
+				downvote($(this))
+			}
+		});
+	</script>
+{% endblock costum_js %}

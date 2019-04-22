@@ -4,7 +4,6 @@ import batasibuk_forum.models
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import froala_editor.fields
 
 
 class Migration(migrations.Migration):
@@ -33,7 +32,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('upvotes', models.IntegerField(default=0)),
                 ('downvotes', models.IntegerField(default=0)),
-                ('body', froala_editor.fields.FroalaField()),
+                ('body', models.TextField()),
                 ('time', models.DateTimeField(auto_now_add=True)),
                 ('comment_parent', models.ForeignKey(blank=True, default=0, on_delete=django.db.models.deletion.CASCADE, related_name='comment_reply', to='batasibuk_forum.Comment')),
             ],
@@ -71,7 +70,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('post_title', models.CharField(max_length=255)),
-                ('body', froala_editor.fields.FroalaField()),
+                ('body', models.TextField()),
                 ('views', models.IntegerField(blank=True, default=0)),
                 ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='posts', to=settings.AUTH_USER_MODEL)),
                 ('forum', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='forum_posts', to='batasibuk_forum.Forum')),

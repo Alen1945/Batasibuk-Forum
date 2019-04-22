@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% block costum_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/forum_home.css" %}">
+{% endblock costum_css %}
+
+
+{% block main_content %}
+
+<div class="row">
+	<div class="col-md-3 d-none d-md-block order-md-1">
+      	{% include "snippets/profile_card.html" %}
+        {% include "snippets/online_creator.html" %}
+    </div>
+    <div class="col-md-6 order-1 order-md-2 ">
+
+            <!-- Post Create-->
+            {% include "snippets/post_create.html" %}
+            <!-- Post CreateEnd-->
+
+            <div class="chanels-card">
+            {% for category in categorys  %}
+				<div class="chanel-detail shadow">
+                 	<img src="/media/logo_image/190331210525.png" alt="user" class="profile-photo" />
+                  <div class="channel-info">
+                  	<a href="{% url "channel" id_channel=category.id name_channel=category.name%}" class="remove-link-format">
+                    <h5 class="channel-title">Chanels {{category.name|capfirst}}</h5>
+                    	<p>{{category.forums.all.count}} Forum{{category.forums.all.count|pluralize}}</p>
+                    </a>
+                  </div>
+                  <div class="hr-custom clearfix"></div>
+                  <div class="channel-forum">
+                    	<h6>{{category.name|capfirst}} Forums </h6>
+                    	{% for forum in category.forums.all %}
+						<a href="{% url "forum:forumview" id_forum=forum.id name_forum=forum.name %}"> <p>Forum {{forum.name}}</p></a>
+							<p>
+								<span>{{forum.forum_posts.all.count}} Post{{forum.forum_posts.all.count|pluralize}}</span>
+								<span>{{forum.subforums.all.count}} Subforum{{forum.subforums.all.count|pluralize}}</span>
+								<ul>
+									{% for sub in forum.subforums.all%}
+										{% if forloop.counter < 4 %}
+											<li><a href="{% url "forum:subforumview" id_forum=sub.id name_forum=sub.name %}">{{sub.name|capfirst}} ({{sub.subforum_posts.all.count }} post{{sub.subforum_posts.all.count|pluralize}})</a></li>
+										{% endif %}
+										{% if forloop.counter == 4 %}
+											<li>...</li>
+										{% endif %}
+									{% endfor %}
+								</ul>
+							</p>
+						{% endfor %}
+                  </div>
+                  
+                </div>
+			{% endfor %}
+            </div>
+   
+    </div>
+    <div class="col-md-3 order-2 order-md-3">
+    	<div class="trend-threads-card shadow">
+	      <h6>Trends For You</h6>
+	      <div class="trend-thread">
+	          <a href="#" class="remove-link-format">
+	          	<p class="threads-title">Cinta yang Bodoh</p >
+	          	<p class="text-muted">Admin on Forum-puisi</p>
+	          </a>
+	      </div>
+	      <div class="trend-thread">
+	          <a href="#" class="remove-link-format">
+	          	<p class="threads-title">Indonesia dalam masa yang sangat pelik</p >
+	          	<p class="text-muted">Admin on Forum-News</p>
+	          </a>
+	      </div>
+	      <div class="trend-thread">
+	          <a href="#" class="remove-link-format">
+	          	<p class="threads-title" >Cinta yang Bodoh</p >
+	          	<p class="text-muted">Admin on Forum-puisi</p>
+	          </a>
+	      </div>
+	    </div>
+	    <div class="suggest-forum-card">
+	      <h6 class="grey">Forum Recomendations</h6>
+	      <div class="follow-forum">
+	          <p><a href="#"class='remove-link-format'>Puisi</a></p>
+	          <a class="remove-link-format" href="#" >Ikuti</a>
+	      </div>
+	      <div class="follow-forum">
+	          <p><a href="#"class='remove-link-format'>Etnomatematika</a></p>
+	          <a class="remove-link-format" href="#" >Ikuti</a>
+	      </div>
+	      <div class="follow-forum">
+	          <p><a href="#"class='remove-link-format'>Forum 1</a></p>
+	          <a class="remove-link-format" href="#" >Ikuti</a>
+	      </div>
+	      <div class="follow-forum">
+	          <p><a href="#"class='remove-link-format'>Forum 2</a></p>
+	          <a class="remove-link-format" href="#" >Ikuti</a>
+	      </div>
+	      <div class="follow-forum">
+	          <p><a href="#"class='remove-link-format'>Forum anime</a></p>
+	          <a class="remove-link-format" href="#" >Ikuti</a>
+	      </div>
+	    </div>
+	   	{% include "snippets/footer.html" %}
+	 </div>
+</div>
+
+{% endblock main_content %}

@@ -1,29 +1,49 @@
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <a class="navbar-brand" href="{% url 'home' %}">Batasibuk</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-sm navbar-light menu fixed-top">
+  <div class="container">
+    
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
-  </button>
+  </button> 
+  <a class="navbar-brand" href="{% url 'home' %}">Batasibuk</a>
+  
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item active" data-toggle='navtooltip' data-placement="bottom" title="Home" >
-        <a class="nav-link" href="{% url "home" %}" ><i class="fa fa-home fa-lg"></i></a>
+      <li class="nav-item active" >
+        <a class="nav-link" href="{% url "home" %}" class="text-center" ><i class="fa fa-home"></i></a>
       </li>
-       <li class="nav-item" data-toggle='navtooltip' data-placement='bottom' title="Buat Thread">
-        <a class="nav-link" href="{% url "forum:newthread" %}"><i class="fa fa-plus fa-lg"></i></a>
-        </li>
       {% if user.is_authenticated %}
-         <li class="nav-item" data-toggle='navtooltip' data-placement="bottom" title="Keluar">
-        <a class="nav-link" href="{% url "logout" %}"><i class="fa fa-sign-out fa-lg"></i></a>
+         <li class="nav-item dropdown">
+           <a href="#" class="nav-link dropdown-toggle btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <div class="btn-profile align-middle">
+               <img src="/media/profil_image/default_profile_normal.png" class="img-fluid">
+            </div>
+            <i class="fa fa-chevron-down"></i>
+           </a>
+           <ul class="dropdown-menu">
+                   <li><a class="nav-link"  href="#">Notify</a></li>
+                    <li><a class="nav-link"  href="#">Account</a></li>
+                    <li><a class="nav-link" href="#">Settings</a></li>
+                    <li><a class="nav-link" href="{% url "logout" %}"><i class="fa fa-sign-out"> Keluar</i></a>
+                    </li>
+           </ul>
+        </li>
+        <li class="nav-item mt-sm-0 mt-2" >
+         <a class="nav-link btn btn-thread" href="{% url "forum:newthread" %}"><i class="fa fa-plus"></i>&nbsp;Thread</a>
         </li>
       {% else %}
-      <li class="nav-item"  data-toggle='navtooltip' data-placement="bottom" title="Register">
+      <li class="nav-item"  >
         <a class="nav-link" href="{% url "register" %}">Register</a>
       </li>
-      <li class="nav-item"  data-toggle='navtooltip' data-placement="bottom" title="Masuk">
-        <a class="nav-link" href="{% url "login" %}"><i class="fa fa-sign-in fa-lg"></i></a>
+      <li class="nav-item" >
+        <a class="nav-link" href="{% url "login" %}"><i class="fa fa-sign-in"></i></a>
       </li>
       {% endif %}
     </ul>
+    <form class="form-inline my-2 my-lg-0 ml-2">
+      <i data-role='submit' class="fa fa-search my-auto"></i>
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    </form>
   </div>
+ </div>
 </nav>

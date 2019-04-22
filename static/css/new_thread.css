@@ -1,0 +1,45 @@
+
+.wrap-create-post{
+	background-color: #fff;
+	padding: 10px 20px 30px;
+	border-radius: 10px;
+}
+.wrap-create-post >h3{
+	text-align: center;
+	color:#fba414;
+	font-weight: bold;
+}
+.wrap-create-post form .form-group >label{
+	color:#333;
+	font-size: 14px;
+}
+.bootstrap-select{
+	display: block!important;
+	margin-left: 8px!important;
+}
+
+.bootstrap-select .dropdown-item.active,.dropdown-item:active,.dropdown-item:hover,.dropdown-item:active:focus{
+	background-color:#fba414 !important;
+	color: #fff!important;
+	transition: ease-out .2s all;
+}
+.bootstrap-select button.dropdown-toggle{
+	background-color:#fff!important;
+	font-weight: bold;
+	border: 1px solid #fba414!important ;
+	color:#222;
+	border-radius: 4px;
+}
+.bootstrap-select .dropdown-item{
+ color:#222;
+ font-size: 17px!important;
+}
+
+.bootstrap-select div.bs-searchbox input{
+	height: 30px;
+
+}
+
+form .btn-outline-orange{
+	margin-bottom: 5px;
+}

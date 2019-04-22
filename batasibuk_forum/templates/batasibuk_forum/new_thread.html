@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block costum_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/new_thread.css" %}">
+{% endblock costum_css %}
+
+{% block costumhead_js %}
+	{{form.media}}
+{% endblock costumhead_js %}
+	
+{% block main_content %}
+<div class="row">
+	<div class="col-md-8 mx-auto">
+		<div class="wrap-create-post shadows">
+			<h3>Buat Thread</h3>
+			<form method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				{% for f in form  %}
+					<div class="form-group">
+						<label for="{{f.id_for_label}}"><strong>{{f.label}}</strong></label>
+						{{f}}
+					</div>
+					
+				{% endfor %}
+				<button type="submit" name="draft" class="btn btn-outline-orange">
+					Simpan Draft
+				</button>
+				<button type="submit" name="post"  class="btn btn-orange px-4">
+					Publish
+				</button>
+				
+			</form>
+
+		</div>		
+	</div>
+</div>
+{% endblock main_content %}
+
+{% block costum_js %}
+	
+{% endblock costum_js %}
+
+
+

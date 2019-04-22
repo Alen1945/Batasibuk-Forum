@@ -1,0 +1,34 @@
+
+.chanels-card{
+  border-radius: 4px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #f1f2f2;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+
+.chanels-card .chanel-detail{
+	width: 100%;
+  padding:10px 10px 8px;
+ background-color: #fff;
+ margin-bottom: 5px;
+}
+
+.chanels-card .chanel-detail .profile-photo{
+	float: left;
+	margin-right: 20px;
+}
+.chanels-card .chanel-detail .remove-link-format{
+	color: #fba414;
+	font-weight: bold;
+}
+.chanels-card .chanel-detail .remove-link-format:hover{
+	color: #ff4a00;
+}
+.chanels-card .chanel-detail .channel-forum> h6{
+	color: #fba414;
+	font-weight: bold;
+	text-align: center;
+}
