@@ -1,0 +1,29 @@
+{% load vote_follow_filter %}
+
+
+{% for c in reply  %}
+						<div class="detail-comment">
+							<div class="post-comment d-flex flex-row align-items-start">
+				               <img src="{{c.user.profile.user_photo.url}}" class="img-fluid user-photo">
+				               <p>
+								<span>{{c.user}}</span>
+								 {{c.body|safe}}
+								</p>
+				            </div>
+							<div class="reaction ml-5">
+								<a href="javascript:void(0)" class="btn btn-claps btn-claps-sm vote-this {{c|is_user_upvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='up'>
+								{% include "snippets/claps-sm.svg" %}
+								</a><span id="up-{{c.id}}">{{c.upvotes}}</span>
+								
+								<a href='javascript:void(0)' class="btn btn-punch btn-punch-sm vote-this {{c|is_user_downvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='down'>
+									{% include "snippets/punch-sm.svg" %}
+								</a><span id="down-{{c.id}}">{{c.downvotes}}</span>
+								
+								
+							</div>
+
+						
+						</div>
+						{%empty%}
+						<p>Tidak Balasan</p>
+					{% endfor %}

@@ -1,0 +1,11 @@
+.content-search{
+	background-color: #fff;
+	padding: 25px 10px 10px;
+}
+.content-search > h4{
+	font-weight: bold;
+	text-align: center;
+}
+.content-search .wrap-content >ul >li{
+	font-weight: bold;
+}

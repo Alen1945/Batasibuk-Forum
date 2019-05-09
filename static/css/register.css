@@ -1,0 +1,158 @@
+.wrap-register{
+	width: 100%;
+	background: #fff;
+	padding: 15px 10px;
+	border-radius: 10px;
+}
+
+
+.wrap-register .title-content{
+	text-align: center;
+	text-transform: capitalize;
+	color: #333;
+	font-weight: bold;
+	margin: 0 0 30px 0;
+	display: block;
+	padding: 0 0 10px 0;
+	border-bottom: 4px solid #fc8207;
+}
+
+.wrap-register .nav-tabs .custom-nav-item{
+	width: 130px;
+	text-align: center;
+	font-weight: bold;
+	color: #333;
+	font-size: 16px;
+}
+.wrap-register .nav-tabs .custom-nav-item.active{
+	border: 0;
+	border-bottom: 3px solid #fc8207;
+}
+
+.wrap-register .tab-content{
+	padding: 20px 10px 20px;
+}
+.wrap-register .tab-content h6{
+	font-weight: bold;
+	margin-left:20px;
+}
+
+
+form .form-group .input-container{
+	position: relative;
+}
+
+
+form .form-input-costum{
+	position: relative;
+}
+form label{
+ 	font-weight: bold;
+	font-size: 16px;
+	color: #333;
+}
+form .form-check-inline {
+	padding: 0;
+	margin-bottom: :10px;
+}
+form .form-check-inline > label{
+	color: #fc8207;
+}
+form .form-check-inline ul{
+	margin-bottom: 0;
+}
+form .form-check-inline ul li{
+	display: inline-block;
+}
+form .form-check-inline ul li label{
+	margin-bottom: 0;
+	color: #222;
+}
+form .form-input-costum {
+	margin-top: 30px;
+}
+form .form-input-costum label{
+	position: absolute;
+	top: 5px;
+	bottom: 0;
+	left: 15px;
+	width: 100%;
+	transition: .2s;
+	font-size: 16px;
+	color: #888;
+
+}
+form .form-input-costum input:focus, 
+form .form-input-costum.has-value input,
+form .form-input-costum.has-error input{
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: #222;
+	border-bottom: 2px solid #fc8207;
+}
+form .form-input-costum input:focus + label,
+form .form-input-costum.has-value input + label,
+form .form-input-costum.has-error input + label{
+	bottom: 100%;
+	margin-top:-25px;
+	color: #fc8207;
+	font-size: 18px;
+}
+
+form .form-input-costum .form-control{
+	height: 45px!important;
+}
+
+form .form-input-costum .input-container + label{
+	bottom: 100%;
+	margin-top:-28px;
+	color: #fc8207;
+	font-size: 18px;
+	left: 60px;
+}
+.emoji-picker-icon{
+	border-right: 3px solid	#fc8207;
+	border-left: 3px solid	#fc8207;
+	padding:2px 5px;
+}
+.emoji-wysiwyg-editor{
+ padding-left: 60px!important;
+ 	border-radius: 6px!important;
+ 	height: 50px!important;
+}
+
+.emoji-wysiwyg-editor:focus{
+	border: 0!important;
+	box-shadow: none;
+	color: #222;
+	border-radius: 0!important;
+	border-bottom: 2px solid #fc8207!important;
+}
+form #wrap-user-photo{
+	width: 100%;
+	margin-bottom: 20px;
+	text-align: center;
+}
+form #wrap-user-photo .user-photo{
+	margin:0 auto!important;
+	width: 200px;
+	height: 200px;
+	position: relative;
+	box-shadow: 0 .5rem .5rem rgba(0, 0, 0, 0.13) !important;
+	overflow: hidden;
+}
+
+form #wrap-user-photo .user-photo img{
+	width:100%;
+	min-width: 0;
+	min-height: 0;
+	max-width: none;
+	max-height: none;
+	border:2px solid #fff;
+}
+form #wrap-user-photo .user-photo > label{
+	position: absolute;
+	right: 10px;
+	bottom: 20px;
+}

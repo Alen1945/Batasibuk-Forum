@@ -1,62 +1,140 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block costum_css %}
-  
-{% endblock costum_css %}
+{% load vote_follow_filter %}
+{% load top_recommend %}
+{% block get_in_head %}
+{{form.media}}
+{% include "snippets/highlight/highlight_css_js.html" %}
 
-{% block costumhead_js %}
-	{{form.media}}
-{% endblock costumhead_js %}
+<link rel="stylesheet" type="text/css" href="{% static "css/thread_view.css" %}">
+
+{% endblock get_in_head %}
+
 
 {% block main_content %}
-	<h4>{{thread.post_title}}</h4>
-	<p>author: {{thread.author}}</p>
-	<p>{{thread.body|safe}}</p>
-	<a href="javascript:void(0)" class="btn btn{% if not thread.user_up_vote %}-outline{% endif %}-success vote-post" data-id="{{thread.post_slug}}" data-cat='posts' data-action='up'>
-		{{thread.upvotes}} Tepuk Tangan 
-	</a>
-	
-	<a href='javascript:void(0)' class="btn btn{% if not thread.user_down_vote %}-outline{% endif %}-danger vote-post" data-id="{{thread.post_slug}}" data-cat='posts' data-action='down'>
-		{{thread.downvotes}} Flungku
-	</a>
-	
-	{% with comments.count as total_comments  %}
-	  <h5>{{total_comments}} comment{{total_comments|pluralize}}</h5>  
-	{% endwith %}
 
-	{% for c in comments  %}
-		<div>
-			<p>
-				comment by {{c.user}} at {{c.time}}
-			</p>
-			<p>{{c.body|safe}}</p>
-			<a href="javascript:void(0)" class="btn btn{% if not c.user_up_vote %}-outline{% endif %}-success vote-comment" data-id="{{c.id}}" data-cat='comments' data-action='up'>
-		{{c.upvotes}} Tepuk Tangan 
-			</a>
+<div class="row">
+    <div class="col-md-8">
 
-			<a href='javascript:void(0)' class="btn btn{% if not c.user_down_vote %}-outline{% endif %}-danger vote-comment" data-id="{{c.id}}" data-cat='comments' data-action='down'>
-				{{c.downvotes}} Flungku
-			</a>
-			{% if c.replys %}
-				{% for reply in c.replys  %}
-					<p>
-					reply to {{c.user}} by {{reply.user}}
-					{{reply.body|safe}}
-					</p>
-				{% endfor %}
-				
-			{% endif %}
-		</div>
-		{%empty%}
-		<p>Tidak ada komentar</p>
-	{% endfor %}
+            <div class="wrap-content shadow">
+            	<div class="thread-content">
+            		<div class="user-detail d-flex flex-row align-items-center shadow">
+            			<div class="user-photo">
+            				<img src="{{thread.author.profile.user_photo.url}}" class="profile-photo">
+            			</div>
+            			<div class="user-info">
+            				<h5><a href="{% url "creator" thread.author.username%}">{{thread.author}}</a></h5>
 
-	<h5>Tambahkan komentar</h5>
-	<form method="post">
-		{% csrf_token %}
-		{{forms_comment.as_p}}
-		<button type="submit" class="btn btn-primary">Komentar</button>
-	</form>
+                  			<a href="javascript:void(0)"class="btn btn-follow follow-this {%is_user_follow thread.author.profile request%}" data-id='{{thread.author.id}}' data-action='user'>{%is_user_follow thread.author.profile request 'get_text'%} </a>
+
+            			</div>
+                	</div>
+                	<div class="thread-detail">
+                		<h4 class="text-center thread-title ">{{thread.post_title}}</h4>
+            			<p class="text-center">Published {{thread.created}}</p>
+                	</div>
+            		<div class="hr-custom"></div>
+					<p>{{thread.body|safe}}</p>
+					<div class="reaction mb-3">
+						<a href="javascript:void(0)" class="btn btn-recommend r-this remove-link-format {{thread|is_user_vote_r:request}}" data-id="{{thread.id}}">{% include "snippets/recommend.svg" %} <span id="s-vote-r">{{thread.post_recommends.all.count}}</span></a>
+
+						<a href="javascript:void(0)" class="btn btn-claps vote-this {{thread|is_user_upvote:request}}" data-id="{{thread.post_slug}}" data-cat='posts' data-action='up'>
+						{% include "snippets/claps.svg" %}
+						</a><span id="up-{{thread.post_slug}}" class='detail-reaction'>{{thread.upvotes}}</span> <span class="d-none d-sm-inline-block detail-reaction">Tepuk-Tangan</span> 
+						
+						<a href='javascript:void(0)' class="btn btn-punch vote-this {{thread|is_user_downvote:request}}" data-id="{{thread.post_slug}}" data-cat='posts' data-action='down'>
+							{% include "snippets/punch.svg" %}
+						</a>
+						<span id="down-{{thread.post_slug}}" class='detail-reaction'>{{thread.downvotes}}</span> <span class="d-none d-sm-inline-block detail-reaction" >Flungku</span>
+						<a href="#wrap-comments" class="totals-comment" ><span class="d-inline-block"><i class="fa fa-comments-o fa-lg"></i>{{thread.post_comments.all.count}} Comment{{thread.post_comments.all.count|pluralize}} </span></a>
+
+
+					</div>
+					<h5>Tambahkan komentar</h5>
+					<form method="post">
+						{% csrf_token %}
+						<p>{{forms_comment.body}}</p>
+						<div class="text-right">
+							<button type="submit" class="d-inline-block btn btn-orange mr-3">Komentar</button> 
+						</div>
+					</form>
+					<div id="wrap-comments" class="mt-4 mb-5">
+					{% with thread.post_comments.all.count as total_comments  %}
+					  <h5>{{total_comments}} comment{{total_comments|pluralize}}</h5>  
+					{% endwith %}
+
+					{% for c in comments  %}
+						<div class="detail-comment mb-3">
+							<div class="post-comment parent-comment d-flex flex-row align-items-start">
+				               <img src="{{c.user.profile.user_photo.url}}" class="img-fluid user-photo">
+				               <p>
+								<span>{{c.user}}</span>
+								 {{c.body|safe}}
+								</p>
+				            </div>
+							<div class="reaction mb-2 ml-5">
+								<a href="javascript:void(0)" class="btn btn-claps btn-claps-sm vote-this {{c|is_user_upvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='up'>
+								{% include "snippets/claps-sm.svg" %}
+								</a><span id="up-{{c.id}}">{{c.upvotes}}</span>
+								
+								<a href='javascript:void(0)' class="btn btn-punch btn-punch-sm vote-this {{c|is_user_downvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='down'>
+									{% include "snippets/punch-sm.svg" %}
+								</a>
+								<span id="down-{{c.id}}">{{c.downvotes}}</span>
+								<a href='javascript:void(0)'data-reply-show="data-reply-{{c.pk}}" data-id="{{c.pk}}" class="show-data-reply"><span class="d-inline-block">&nbsp;<i class="fa fa-comments-o fa-lg"></i> {{c.comment_reply.all.count}} Balasan</span></a>
+								<a href='javascript:void(0)'data-form-show="form-reply-{{c.pk}}" class="show-form-reply">Balas</a>
+								
+							</div>
+							<!-- daftar reply-->
+								<div id="data-reply-{{c.pk}}" class="data-reply pl-5">
+								</div>
+								<!-- end daftar reply-->
+								<!-- form reply-->
+								<div id="form-reply-{{c.pk}}" class="d-none form-reply mt-2 pl-4">
+								<form method="post">
+									{% csrf_token %}
+									<input name="id_parent_comment" id="id_id_parent_comment" type="hidden" value={{c.pk}}>
+									<p>
+									<textarea name="body" class="form-control" placeholder="Berikan Komentar untuk Thread ini" id="id_body-{{c.pk}}"></textarea></p>
+									<div class="text-right">
+										<button type="submit" class="d-inline-block btn btn-orange mr-3">Balas</button>
+									</div>
+									
+								</form>
+								</div>
+								<!-- end form reply-->
+								<div class="hr-custom mt-2"></div>
+						</div>
+						{%empty%}
+						<p>Tidak ada komentar</p>
+					{% endfor %}
+					</div>
+
+            	</div>
+            </div>
+
+            
+    </div>
+    <div class="col-md-4">
+    	{% if user.is_authenticated %}
+    		<!-- Post Create-->
+        {% include "snippets/post_create.html" %}
+        <!-- end Post CreateEnd-->
+    	{% endif %}
+		
+        
+    	<!-- top recommend-->
+    	{%top_recommend%}
+    	<!-- end top recommend-->
+
+	     <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+</div>
+
 {% endblock main_content %}
 
 
@@ -75,15 +153,21 @@
 				},
 				data_type:'json',
 				success:function(data){
-					e.toggleClass('btn-outline-success')
-					e.toggleClass('btn-success')
-					e.html(data.upvotes+' Tepuk Tangan')
-					if(data.cancel=='down'){
-						btn_down=$('.vote-post[data-action="down"][data-id='+data_id+']')
-						btn_down.removeClass('btn-danger')
-						btn_down.addClass('btn-outline-danger')
-						btn_down.html(data.downvotes+' Flungku')
+					if(data.redirect_login){
+						window.location.replace('/login?next=/api/'+data_cat+'/'+data_id+'/upvote')
+					}else{
+						//tambah kelas ubah data
+						e.toggleClass('active')
+						data_up=$('#up-'+e.attr('data-id'))
+						data_up.text(data.upvotes)
+
+						//hapus kelas ubah data
+						btn_down=$('.vote-this[data-action="down"][data-id='+data_id+']')
+						btn_down.removeClass('active')
+						data_down=$('#down-'+btn_down.attr('data-id'))
+						data_down.text(data.downvotes)
 					}
+
 				}
 			})
 		};
@@ -98,21 +182,25 @@
 					csrfmiddlewaretoken:'{{csrf_token}}',
 				},
 				success:function(data){
-					console.log('alen')
-					e.toggleClass('btn-outline-danger')
-					e.toggleClass('btn-danger')
-					e.html(data.downvotes+' Flungku')
-					if(data.cancel=='up'){
-						btn_down=$('.vote-post[data-action="up"][data-id='+data_id+']')
-						btn_down.removeClass('btn-success')
-						btn_down.addClass('btn-outline-success')
-						btn_down.html(data.upvotes+' Tepuk Tangan')
+					if(data.redirect_login){
+						window.location.replace('/login?next=/api/'+data_cat+'/'+data_id+'/downvote')
+					}else{
+						//tambah kelas ubah data
+						e.toggleClass('active')
+						data_down=$('#down-'+e.attr('data-id'))
+						data_down.text(data.downvotes)
+
+						//hapus kelas ubah data
+						btn_up=$('.vote-this[data-action="up"][data-id='+data_id+']')
+						btn_up.removeClass('active')
+						data_up=$('#up-'+btn_up.attr('data-id'))
+						data_up.text(data.upvotes)
 					}
 				}
 			})
 		};
 
-		$('.vote-post').click(function(e){
+		$(document).on('click','.vote-this',function(e){
 			e.preventDefault()
 			action=$(this).attr('data-action')
 			if (action=='up'){
@@ -121,5 +209,86 @@
 				downvote($(this))
 			}
 		});
+
+		function set_ckeditor(id){
+			$('#'+id).find('textarea').each(function(){
+				$('#'+id).removeClass('d-none')
+				if (! CKEDITOR.instances[this.id]){
+					CKEDITOR.replace(this.id,{
+						'toolbar':'Comment',
+        				'skin':'batasibuk',
+        				'toolbar_Comment':[['Emoji','Link','Image','CodeSnippet']],
+        				'height':70,
+       					 'width':'98%',
+       					 'extraPlugins':'codesnippet,emoji',
+        				'removePlugins':'resize,elementspath,stylesheetparser',
+        				'toolbarLocation':'bottom',
+					})
+				}
+				
+				
+			})
+
+		}
+		$(document).on('click',".show-form-reply",function(e){
+			e.preventDefault()
+			data_form=$(this).attr('data-form-show')
+			$('.form-reply').addClass('d-none')
+			$('.data-reply').addClass('d-none')
+			set_ckeditor(data_form)
+			
+		});
+
+		$(document).on('click',".show-data-reply",function(e){
+			e.preventDefault()
+			data_reply=$(this).attr('data-reply-show')
+			data_id=$(this).attr('data-id')
+			data_form=$(this).next().attr('data-form-show')
+			$('.form-reply').addClass('d-none')
+			$('.data-reply').addClass('d-none')
+			set_ckeditor(data_form)
+			$.ajax({
+				type:'POST',
+				url:'/api/get_replys/'+data_id,
+				data:{
+					csrfmiddlewaretoken:'{{csrf_token}}',
+				},
+				success:function(data){
+					$('#'+data_reply).html(data)
+					$('#'+data_reply).removeClass('d-none')
+				}
+			})
+
+
+		});
+
+
+	$(document).on('click','.r-this',function(ev){
+		ev.preventDefault();
+		data_id=$(this).attr('data-id')
+		r_this=$(this)
+		$.ajax({
+			type:'POST',
+			url:'/api/posts/'+data_id+'/vote_r',
+			data:{
+				csrfmiddlewaretoken:'{{csrf_token}}'
+			},
+			success:function(data){
+				if (data.redirect_login){
+					window.location.replace('/login?next=/api/posts/'+data_id+'/vote_r');
+				}
+				else{
+					if (data.action=='vote'){
+						r_this.addClass('active')
+					}else if(data.action='cancel'){
+						r_this.removeClass('active')
+					}
+					$('#s-vote-r').text(data.score);
+				}
+				
+			}
+		})
+	});
 	</script>
+	{% include "snippets/follow.html" %}
 {% endblock costum_js %}

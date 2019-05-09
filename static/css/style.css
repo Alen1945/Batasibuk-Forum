@@ -1,22 +1,83 @@
+@font-face{
+	font-family:'Agency';
+	src:url('../fonts/agency-fb.ttf');
+}
+
+
 html, body {
   height: 100%;
   width: 100%;
 }
-
+#contents{
+	width: 97%;
+	margin:0 auto;
+	padding:30px 0 40px;
+	box-sizing: border-box;
+}
 body{
-	font-family: "Helvetica Neue",Helvetica,,Arial,sans-serif;
+	font-family: Helvetica, Arial,sans-serif;
   line-height: 20px;
 	color: #14171a;
-	background-color: #f0edec;
+	background-color: #eee;
 	font-size: 13px;
 	padding-top: 60px;
 }
 
-img{
-	width: 100%;
+.img-logo{
+	margin: 10px 0;
+	width: 120px;
+	padding: 0;
 }
+.img-logo img{
+	width: 120px;
+	height: auto;
+}
+
+.btn{
+	font-family: Helvetica,Arial,sans-serif!important;
+	font-weight: 700;
+	letter-spacing: .1px;
+}
+.btn-follow {
+	color: #fc8207;
+	background-color: transparent;
+	background-image: none;
+	border-color: #fc8207;
+	font-weight: bold;
+	width: 120px;
+	border-radius: 20px;
+}
+
+.btn-follow:hover,.btn-follow.active {
+ color:#fff;
+ background-color:#ff6601;
+ border-color:#fc8207;
+}
+
+.btn-follow:focus{
+	box-shadow: 0 0 0 .2rem rgba(248, 125, 6, 0.44);
+}
+
+
+
+.btn-follow-sm {
+	color: #fc8207;
+	background-color: transparent;
+	background-image: none;
+	border-color: #fc8207;
+	font-weight: bold;
+	width: 70px;
+	border-radius: 20px;
+}
+
+.btn-follow-sm:hover,.btn-follow-sm.active {
+ color:#fff;
+ background-color:#ff6601;
+ border-color:#fc8207;
+}
+
 .btn-create-thread{
-	background-color: #fba414;
+	background-color: #fc8207;
 	border-radius:20px;
 	font-size: 16px;
 	font-weight: bold;
@@ -33,27 +94,30 @@ img{
 }
 .btn-orange{
 	color: #fff;
-    background-color: #fba414;
-    border-color: #fba420;
+    background-color: #ff6601;
+    border-color: #fc8207;
      font-weight: bold;
 }
 .btn-orange:hover{
 	color: #fff;
-    background-color: #fba420;
-    border-color: #fba414;
+    background-color: #fc8207;
+    border-color: #fc8207;
 }
 .btn-outline-orange {
-    color: #fba414;
+    color: #fc8207;
     background-color: transparent;
     background-image: none;
-    border-color: #fba414;
+    border-color: #fc8207;
      font-weight: bold;
 }
 .btn-outline-orange:hover {
  color:#fff;
- background-color:#fba414;
- border-color:#fba414;
+ background-color:#ff6601;
+ border-color:#fc8207;
 }
+
+
+
 
 .hr-custom{
   background: none;
@@ -63,18 +127,31 @@ img{
   margin: auto;
   margin-bottom: 10px;
 }
-
-#contents{
-	padding:30px 0 40px;
+.modal{
+	z-index: 9999999999;
 }
-
+ .modal-content{
+ 	top:30px;
+ }
 
 /*navbar*/
 .menu{
   background: linear-gradient(to bottom, #fff, #fbfbfb);
-  border-bottom: 2px solid rgba(0,0,0,0.1);
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 0;
   margin-bottom: 0;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.18);
+  z-index: 99999999999999999999999999;
+}
+.menu ul.navbar-nav li.dropdown ul li{
+	font-weight: bold;
+}
+.menu ul.navbar-nav li.dropdown ul li:hover a{
+	color: #fc8207;
+}
+.menu .navbar-brand img{
+	height: 25px;
 }
 .menu form{
   margin: 0 0;
@@ -82,29 +159,36 @@ img{
 .menu form.form-inline{
 	position: relative;
 }
-.menu form.form-inline i.fa{
+.menu form.form-inline i.fa-search{
   position: absolute;
   left: 15px;
-  color: #000;
+  color: #fc8207;
   font-size: 15px;
 }
 .menu form.form-inline input.form-control{
-  background: #e6ecf0;
+  background: #fff;
   border: 0;
   box-shadow: none;
   min-width: 235px;
-  color: #333;
+  color: #111;
   height: 35px;
   border-radius: 15px;
+  border:.5px solid #ff6601;
   font-size: 15px;
   padding-left: 35px;
+  transition:ease-in .3s;
 }
-
+.menu form.form-inline input.form-control:focus{
+	box-shadow: 0 0 0 .2rem rgba(240, 107, 9, 0.5);
+}
 .menu ul.navbar-nav{
 	align-items: center;
 }
 .menu ul.navbar-nav li{
 	width: 95%;
+}
+.menu ul.navbar-nav li.active .fa-home,.menu ul.navbar-nav li:hover .fa-home{
+	color: #fc8207;
 }
 .menu  ul.navbar-nav li a.dropdown-toggle{
 	text-align: left;
@@ -128,7 +212,7 @@ img{
 	padding:0;
 }
 .menu ul.navbar-nav li a.dropdown-toggle > i.fa{
-	color:#fba414;
+	color:#ff6601;
 }
 .menu ul.navbar-nav li a.dropdown-toggle:after{
 	display: none;
@@ -139,10 +223,11 @@ img{
 	display: inline-block;
 	padding: 0;
 	width: 30px;
+	border:.5px solid rgba(255, 102, 0, 0.3);
 }
 
 .menu ul.navbar-nav li a.btn-thread{
-	background-color: #fba414;
+	background-color: #fc8207;
 	border-radius:20px;
 	color: #fff;
 	font-size: 16px;
@@ -151,14 +236,22 @@ img{
 	padding: 4px 0;
 	width:100px;
 	height: 27px;
+	transition: .3s;
 }
 .menu ul.navbar-nav li a.btn-thread:hover,.menu ul.navbar-nav li a.btn-thread:active,.menu ul.navbar-nav li a.btn-thread:focus{
+ 	color: #fff;
+ 	box-shadow: 1px 3px 3px 0 rgba(0,0,0,.2);
  	padding: 4px 0;
- 	color:#999;
- 	border: 2px solid #f6dbae;
 }
 
-
+.menu ul.navbar-nav li.register,.menu ul.navbar-nav li.login{
+	font-size: 16px;
+	font-weight: bold;	
+}
+.menu ul.navbar-nav li.register:hover a,.menu ul.navbar-nav li.login:hover a,
+.menu ul.navbar-nav .register.active a,.menu ul.navbar-nav .login.active a{
+	color:  #fc8207;
+}
 .profile-card{
 	background-color: #fff;
 	border-radius: 6px;
@@ -173,7 +266,7 @@ img{
 .profile-card .profile-name{
 	font-size: 18px;
 	font-weight: bold;
-	color: #ff9f00;
+	color: #ff6601;
 }
 .profile-card .profile-info{
 	margin-bottom: 5px;
@@ -184,7 +277,7 @@ img{
 	text-decoration: none;
 }
 .profile-card .profile-fields{
-  background: linear-gradient(#feb846 0%,#ed9604 90%,#ed9606 100%);
+  background: linear-gradient(90deg,#fc8207 0%,#f05c27 50%,#e7413f 100%);
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   width: 100%;
@@ -197,11 +290,10 @@ img{
 .profile-card .profile-fields img.profile-photo{
   border: 3px solid #fff;
   background-color: #fff;
-  float: left;
   position: absolute;
   top: -35px;
-  height: 70px;
-  width: 70px;
+  height: 65px;
+  width: 65px;
   border-radius: 50%;
 }
 
@@ -226,57 +318,7 @@ img{
 	color:#007bff;
 }
 
-#online-kreator{
-  margin: 0 0 40px 0;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 4px;
-  background-color: #fff;
-}
 
-#online-kreator .title{
-  background: #fba414;
-  padding: 5px 20px;
-  width: 70%;
-  min-height: 30px;
-  border-radius: 15px;
-  position: relative;
-  margin: 0 auto 20px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-ul.list-kreator{
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: center;
-  margin: 0;
-}
-
-ul.list-kreator li{
-  list-style: none;
-  position: relative;
-  margin: 6px auto !important;
-  padding-left: 3px;
-  padding-right: 3px;
-  display: inline-block;
-}
-
-ul.list-kreator li:after{
-content: '';
-  background: linear-gradient(to bottom, rgba(141,198,63, 1), rgba(0,148,68, 1));
-  border: none;
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  position: absolute;
-  bottom: -6px;
-  border: 2px solid #fff;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
 img.profile-photo {
     height: 58px;
     width: 58px;
@@ -318,14 +360,15 @@ img.profile-photo {
 	height: 40px;
 	line-height: 40px;
 	color: #007bff;
-	font-size: 14px;
-	font-weight: bold;
+	font-size: 13.5px;
 	padding-top: 0;
 	text-align: center;
 	border:2px solid #007bff;
+	opacity: 0.8;
 }
 .create-post .btn-forum:hover{
-	color: #fbfbfb;
+	color: #fff;
+	opacity: 1;
 	background-color: #007bff;
 }
 
@@ -334,38 +377,48 @@ img.profile-photo {
   width: 100%;
   border: 1px solid #f1f2f2;
   margin-bottom: 20px;
+  background-color: #fff;
 }
 
 
-.content-posts .post-container{
+.post-container{
   padding: 15px;
-  background-color: #fbfbfb;
 }
-.content-posts .post-container .post-detail{
+.post-container .post-detail{
 	padding:10px 8px 8px;
 	background-color: #fff;
-
 }
-.content-posts .post-container .post-detail .profile-photo{
+.post-container .post-detail .profile-photo{
 	float: left;
 	margin-right: 20px;
 }
-.content-posts .post-container .post-detail .user-info > h5{
+.post-container .post-detail .user-info > h5{
 	margin-bottom: 2px;
 }
-.content-posts .post-container .post-detail .post-text{
+.post-container .post-detail .post-text{
   line-height: 24px;
   margin: 0;
     font-size: 15px;
     padding: 2px;
     position: relative;
     box-sizing: border-box;
+    transition: ease-in .1s all;
+    color: #111;
 }
-.content-posts .post-container .post-detail .post-text:hover > a:before{
+
+.post-container .post-detail .post-text a > p.thread-title{
+	font-size: 16px;
+	color: #000;
+	text-align: center;
+	font-weight: bold;
+	margin:2px 0 -5px;
+	text-transform: capitalize;
+}
+.post-container .post-detail .post-text:hover > a:before{
 	content:'Open Thread';
 	position: absolute;
-	background-color:#fba414;
-	bottom: 20px;
+	background-color:#fc8207;
+	bottom:30px;
 	right: 5px;
 	color: #fff;
 	text-align: center;
@@ -389,29 +442,35 @@ img.profile-photo {
 }
 .trend-threads-card .trend-thread{
 	padding:2px;
-	border-radius: 3px;
-	width: 95%;
+	border-radius: 0;
+	width: 100%%;
+	border-bottom: 2px solid rgba(0,0,0,0);
 	transition: ease-in .2s all;
 }
 .trend-threads-card > h6{
 	font-weight: bold;
-	color: #fba414;
+	color: #ff6600;
 	text-shadow: 0rem .14rem rgba(0,0,0,.15);
 }
 .trend-threads-card .trend-thread:hover{
-	color: #fba414;
-	border-bottom: 2px solid #fba414;
+	color: #ff6600;
+	border-bottom: 2px solid #ff6600;
 }
 .trend-threads-card .trend-thread > a > .threads-title{
 	margin-bottom: 0px;
 	font-weight: bold;
 	font-size: 14px;
+	margin-bottom: 0;
 }
-.trend-threads-card .trend-thread > a > .text-muted{
-	font-size: 11px;
-	margin-bottom: 0px;
+.trend-threads-card .trend-thread > a > .thread-detail{
+	margin-bottom: 5px;
 }
-
+.trend-threads-card .trend-thread > a > .thread-detail .thread-r{
+	font-size: 13px;
+	font-weight: bold;
+	margin-left: 3px;
+	color:  #007bff;
+}
 .suggest-forum-card{
 	width: 100%;
 	padding:5px 10px;
@@ -424,13 +483,17 @@ img.profile-photo {
 	padding:2px;
 	border-radius: 5px;
 	width: 95%;
-	border: 1px solid #fba414;
+	border: 1px solid #ff6600;
 	margin-bottom:4px;
 }
 .suggest-forum-card > h6{
 	font-weight: bold;
-	color: #fba414;
+	color:#ff6600;
 	text-shadow: 0rem .14rem rgba(0,0,0,.15);
+}
+.suggest-forum-card .follow-forum{
+	margin-left: auto;
+	margin-right: auto;
 }
 .suggest-forum-card .follow-forum > p{
 	display: block;
@@ -439,15 +502,17 @@ img.profile-photo {
 	font-size: 1.1em;
 	transition: ease-in .2s all;
 }
-.suggest-forum-card .follow-forum > a{
-	display: block;
-	font-size: 15px;
-	transition: ease-in .2s all;
+.suggest-forum-card .follow-forum:hover > p{
+	color:#ff6600;
 }
-.suggest-forum-card .follow-forum > a:hover,.suggest-forum-card .follow-forum > p:hover{
-	color:  #fba414;
+.suggest-forum-card .follow-forum .btn-follow{
+	height: 25px;
+	width: 90px;
+	font-size: 13px;
+	padding: 0;
+	margin-top: 0px;
+	margin-bottom: 3px;
 }
-
 
 
 
@@ -462,7 +527,7 @@ img.profile-photo {
 #footer .footer-content >h6{
 	text-align: center;
 	font-weight: bold;
-	color: #fba414;
+	color: #ff6600;
 	text-shadow: 0rem .14rem rgba(0,0,0,.15);
 }
 
@@ -471,5 +536,17 @@ img.profile-photo {
 	color: #333;
 }
 
+
+
+
+
+@media (max-width: 1153px){
+	.profile-card .profile-fields img.profile-photo{
+	  height: 45px;
+	  width: 45px;
+	 left:5px;
+	 top: -30px;
+	}
+}
 
 

@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+{% load static %}
+{% load top_recommend %}
+
+
+
+{% block get_in_head %}
+
+  {% include "snippets/date_picker/datepicker_css.html" %}
+  {% include "snippets/emojipicker/emoji_css.html" %}
+  {% include "snippets/cropper/cropper_css_js.html" %}
+
+  <link rel="stylesheet" type="text/css" href="{% static "css/profile_account.css" %}">
+
+{% endblock get_in_head %}
+
+
+
+{% block main_header %}
+<div id="do-edit-profile">
+  
+</div>
+
+<div class="container-fluid">
+  <div class="wrap-header">
+      <div class="image-header">
+        <img src="{{user.profile.user_header.url}}">
+        <label for='id_user_header' id="label-user-header" style="display: none;">GantiHeader</label>
+      </div>
+      <div class="profile">
+          <div class="detail-profile">
+            <div class="image-profil">
+               <img src="{{user.profile.user_photo.url}}" />
+            </div>
+            <label for='id_user_photo' id="label-user-photo" style="display: none;">GantiFoto</label>
+            <a href="#" class="profile-name remove-link-format">{{user.username}}</a>
+            <p class="profile-info">{{user.profile.info}}</p>
+          </div>
+          <div class="profile-stats d-flex flex-row justify-content-around align-items-center">
+              <a href="" class="d-inline-block remove-link-format">
+                  {{user.posts.all.count}} Post  {{user.posts.all.count|pluralize}} 
+              </a>
+              <a href="" class="d-inline-block remove-link-format">
+                 {{user.profile.followers.all.count}} Pengikut
+              </a>
+              <a href="javascript:void(0)" class="d-inline-block remove-link-format" data-action='edit-profile' id="btn-edit-profile">
+                 Edit Profile
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- modal crop-->
+  <div class="modal fade" id="modalcrop">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body" style="position:relative;padding:0">
+        <img src="" id='image-to-crop' style="width:auto;height:80vh">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default js-zoom-in"><i class="fa fa-search-plus"></i></button>
+        <button type="button" class="btn btn-default js-zoom-out mr-auto"><i class="fa fa-search-minus"></i></button>
+        <button type="button" class="btn btn-primary js-crop-and-upload" data-dismiss='modal'>Crop dan Upload</button>
+      </div>
+    </div>
+    </div>
+  </div>
+<!-- ahir modal crop-->
+{% endblock main_header %}
+
+
+{% block main_content %}
+
+<div class="row">
+	<div class="col-md-3 order-md-1 side-left">
+        <div class="user-profile shadow">
+              <div class="title">{{user}} profile</div>
+              <!--hidden form-->
+              <form method="Post" enctype="multipart/form-data" id="change-profile" style="display: none;">
+                {% csrf_token %}
+              {% with form.info as f %}
+                <div class="form-group row">
+                  <label for="{{f.id_for_label}}" class="col-3 col-form-label">{{f.label}}</label>
+                  <div class="col-9">
+                    <p class="input-container">{{f}}</p>
+                  </div>
+                </div>                   
+               {% endwith %} 
+               {% with form.date_of_birth as f %}
+                <div class="form-group row">
+                  <label for="{{f.id_for_label}}" class="col-3 col-form-label">{{f.label}}</label>
+                  <div class="col-9">
+                    {{f}}
+                  </div>
+                </div>                   
+               {% endwith %}
+               {% with form.location as f %}
+                <div class="form-group row">
+                  <label for="{{f.id_for_label}}" class="col-3 col-form-label">{{f.label}}</label>
+                  <div class="col-9">
+                    {{f}}
+                  </div>
+                </div>                   
+               {% endwith %}
+               {% with form.website as f %}
+                <div class="form-group row">
+                  <label for="{{f.id_for_label}}" class="col-3 col-form-label">{{f.label}}</label>
+                  <div class="col-9">
+                    {{f}}
+                  </div>
+                </div>                   
+               {% endwith %}
+                {% with form.user_photo as f %}
+                <div class="form-group row d-none">
+                    {{form.x_p}}{{form.y_p}}{{form.w_p}}{{form.h_p}}
+                    {{f}}
+                </div>                   
+               {% endwith %}
+               {% with form.user_header as f %}
+                <div class="form-group row d-none">
+                  {{form.x_h}}{{form.y_h}}{{form.w_h}}{{form.h_h}}
+                    {{f}}
+                </div>                   
+               {% endwith %}
+              </form>
+              <!--hidden form-->
+              <div class="row detail-user-profile">
+                <div class="col-3">Info</div> 
+                <div class="col-9 text-center" id="this-user-info">{{user.profile.info}}</div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-3">Birthday</div> 
+                <div class="col-9 text-center" id="this-user-birthday">
+                  {% if user.profile.date_of_birth %}
+                  {{user.profile.date_of_birth}}
+                  {% else %}-
+                  {% endif %}
+                </div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-3">Location</div> 
+                <div class="col-9 text-center" id="this-user-location">
+                {% if user.profile.location %}
+                  {{user.profile.location}}
+                  {% else %}-
+                  {% endif %}
+                </div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-3">Website</div> 
+                <div class="col-9 text-center" id="this-user-website">{% if user.profile.webiste %}
+                  {{user.profile.webiste}}
+                  {% else %}  -
+                  {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-3">Posts</div> 
+                <div class="col-9 text-center">{{user.posts.all.count}}</div>
+                <div class="w-100 mb-2"></div>
+                <div class="col-3">Pengikut</div> 
+                <div class="col-9 text-center">{{user.profile.followers.all.count}}</div>
+                <div class="w-100"></div>
+              </div>
+        </div>
+        <!-- top recommend-->
+      {%top_recommend%}
+      <!-- end top recommend-->
+    </div>
+    <div class="col-md-6 order-1 order-md-2 ">
+
+            <!-- Post Create-->
+            {% include "snippets/post_create.html" %}
+            <!-- Post CreateEnd-->
+        
+            <!-- Posts-->
+        <div class="content-posts">
+            {% with user_thread as threads  %}
+                        {% include "snippets/container_card_threads.html" %}
+                    {% endwith %}
+              <!--if all threads has paginated-->
+                {% include "snippets/this_paginated.html" %}
+              <!--end if all threads has paginated-->
+        </div>
+        <!-- end Posts-->
+    </div>
+    <div class="col-md-3 order-2 order-md-3">
+      
+	    <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block costum_js %}
+
+{% include "snippets/emojipicker/emoji_js.html" %}
+{% include "snippets/date_picker/datepicker_js.html" %}
+
+<!--croper custom-->
+<script type="text/javascript">
+
+    $('#btn-edit-profile').click(function(e){
+      e.preventDefault()
+      action=$(this).attr('data-action')
+      if(action=='edit-profile'){
+        $('#change-profile').show();
+        $('#label-user-photo').show();
+        $('#label-user-header').show();
+        $('.detail-user-profile').hide();
+        $(this).html('Simpan Perubahan');
+        $(this).attr('data-action','save-profile');
+        $('#do-edit-profile').show();
+        
+      }else if(action=='save-profile'){
+        $('#change-profile').hide();
+        $('#label-user-photo').hide();
+        $('#label-user-header').hide();
+        $(this).attr('data-action','edit-profile')
+        $(this).html('Edit Profile')
+        $('#change-profile').submit()
+      }
+    });
+
+
+    let data_set={
+      'set_header':{
+        'image_container':'.image-header',
+        'ratio':2/0.7,
+        'pre':'_h',
+      },
+      'set_photo':{
+        'ratio':1/1,
+        'image_container':'.image-profil',
+        'pre':'_p',
+      },
+    };
+    let type_set=''
+    $('input[type="file"]').change(function(ev){
+      if(this.files && this.files[0]){
+        let tmp_file=URL.createObjectURL(ev.target.files[0])
+        $('#image-to-crop').attr('src',tmp_file)
+        $('#modalcrop').modal('show')
+        if(this.name=='user_header'){
+          type_set= data_set['set_header']
+        }else if(this.name=='user_photo'){
+          type_set= data_set['set_photo']
+        }
+      }
+    });
+    let image=$('#image-to-crop')[0];
+    let cropBoxData;
+    let canvasData;
+    $('#modalcrop').on('shown.bs.modal',function(){
+      cropper=new Cropper(image,{
+        aspectRatio:type_set['ratio'],
+        dragMode: 'move',
+        ready:function(ev){
+          let clone=this.cloneNode();
+          clone.className='';
+          clone.id='';
+          clone.style.cssText = (
+              'width: 100%;' 
+            );
+          $(type_set['image_container']).find('img').remove();
+          $(type_set['image_container'])[0].append(clone.cloneNode())
+          cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+        },
+        crop:function(ev){
+          let data=ev.detail;
+          let cropper=this.cropper;
+          let data_image=cropper.getImageData();
+          let crop_data_ratio=data.width/data.height;
+          //elem=element container image
+          let elem=$(type_set['image_container'])[0]
+          let image_preview=elem.getElementsByTagName('img')[0]
+          //box image = element container image
+          let boximage_width=elem.offsetWidth;
+          //get box new height
+          let boximage_height=boximage_width/crop_data_ratio;
+          //get scala crop:box
+          let image_scale=data.width/boximage_width;
+          //change elem/box height
+          elem.style.height=boximage_height+'px'
+
+          //change image width and height
+          image_preview.style.width=data_image.naturalWidth/image_scale +'px';
+          image_preview.style.height=data_image.naturalHeight/image_scale+'px';
+          //change position image
+          image_preview.style.marginLeft=-data.x/image_scale+'px';
+          image_preview.style.marginTop=-data.y/image_scale+'px'
+        }
+      });
+    }).on('hidden.bs.modal',function(){
+      let cropData=cropper.getData();
+      $('#id_x'+type_set['pre']).val(cropData['x']);
+      $('#id_y'+type_set['pre']).val(cropData['y']);
+      $('#id_h'+type_set['pre']).val(cropData['height']);
+      $('#id_w'+type_set['pre']).val(cropData['width']);
+      cropBoxData=cropper.getCropBoxData();
+      canvasData=cropper.getCropBoxData();
+      cropper.destroy();
+    });
+    $('.js-zoom-in').click(function(){
+    cropper.zoom(.2)
+    
+    });
+    $('.js-zoom-out').click(function(){
+    cropper.zoom(-0.2)
+    });
+</script>
+<!-- end croper custom-->
+{% include "snippets/follow.html" %}
+{% endblock costum_js %}

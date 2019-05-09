@@ -1,44 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block costum_css %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/new_thread.css" %}">
-{% endblock costum_css %}
-
-{% block costumhead_js %}
+{% block get_in_head %}
 	{{form.media}}
-{% endblock costumhead_js %}
+	{% include "snippets/emojipicker/emoji_css.html" %}
+	
+    <link rel="stylesheet" type="text/css" href="{% static "css/new_thread.css" %}">
+
+{% endblock get_in_head %}
+
 	
 {% block main_content %}
 <div class="row">
-	<div class="col-md-8 mx-auto">
+	<div class=" col-lg-9 mx-auto">
 		<div class="wrap-create-post shadows">
 			<h3>Buat Thread</h3>
 			<form method="post" enctype="multipart/form-data">
 				{% csrf_token %}
 				{% for f in form  %}
+
 					<div class="form-group">
 						<label for="{{f.id_for_label}}"><strong>{{f.label}}</strong></label>
-						{{f}}
+						<p class="input-container">{{f}}</p>
 					</div>
 					
 				{% endfor %}
-				<button type="submit" name="draft" class="btn btn-outline-orange">
+				<div class="text-center">
+					<button type="submit" name="draft" class=" ml-auto btn btn-outline-orange mr-3">
 					Simpan Draft
-				</button>
-				<button type="submit" name="post"  class="btn btn-orange px-4">
+					</button>
+					<button type="submit" name="post"  class="btn btn-orange px-4">
 					Publish
-				</button>
+					</button>
+				</div>
 				
 			</form>
-
+			<div class="mx-auto img-logo">
+				<img src="{% static "image/logo.png" %}">
+			</div>
 		</div>		
 	</div>
 </div>
 {% endblock main_content %}
 
 {% block costum_js %}
-	
+	{% include "snippets/emojipicker/emoji_js.html" %}
 {% endblock costum_js %}
 
 

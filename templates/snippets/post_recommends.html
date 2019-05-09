@@ -1,0 +1,11 @@
+<div class="trend-threads-card shadow">
+  <h6>Top Recommend</h6>
+  {% for thread  in posts %}
+  	<div class="trend-thread">
+      <a href="{% url 'thread' thread.post_slug thread.post_title %}" class="remove-link-format">
+      	<p class="threads-title">{{thread.post_title}}</p >
+      	<p class="thread-detail"><span class='text-muted'>Published {{thread.created|timesince}} yang lalu</span><span class="thread-r">{{thread.post_recommends.all.count}} R</span></p>
+      </a>
+  	</div>
+  {% endfor %}
+</div>

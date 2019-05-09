@@ -88,6 +88,25 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
+
+
+#Default password validation 
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
+
+#custom
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,16 +117,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'id'
 
 TIME_ZONE = 'UTC'
 
@@ -144,20 +159,22 @@ CKEDITOR_CONFIGS={
         'toolbar':'Thread',
         'skin':'batasibuk',
         'toolbar_Thread':[
-            {'name':'Basic','items':['Bold','Italic','-','JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-            {'name':'Media','items':['Emoji','Link','Image','CodeSnippet','Source']}
+            {'name':'Basic','items':['Bold','Italic','-','JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock','-']},
+            {'name':'Media','items':['Emoji','Link','Image','CodeSnippet']},
+            {'name':'Source','items':['Source']}
         ],
         'height':350,
-        'width':'100%',
+        'width':'98%',
         'extraPlugins':','.join(['codesnippet','emoji']),
         'removePlugins':'resize,elementspath,stylesheetparser',
         'allowedContent':True,
     },
     'comment_thread':{
         'toolbar':'Comment',
+        'skin':'batasibuk',
         'toolbar_Comment':[['Emoji','Link','Image','CodeSnippet']],
-        'height':125,
-        'width':'100%',
+        'height':85,
+        'width':'98%',
         'extraPlugins':','.join(['codesnippet','emoji']),
         'removePlugins':'resize,elementspath,stylesheetparser',
         'toolbarLocation':'bottom',
@@ -166,7 +183,7 @@ CKEDITOR_CONFIGS={
 # redirect_login
 LOGIN_URL='login'
 LOGIN_REDIRECT_URL='home'
-
+LOGOUT_REDIRECT_URL='home'
 
 
 

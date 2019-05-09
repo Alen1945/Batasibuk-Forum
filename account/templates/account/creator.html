@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% load vote_follow_filter %}
+{% load top_recommend %}
+
+
+
+{% block get_in_head %}
+
+  <link rel="stylesheet" type="text/css" href="{% static "css/profile_account.css" %}">
+
+{% endblock get_in_head %}
+
+
+
+{% block main_header %}
+<div class="container-fluid">
+  <div class="wrap-header">
+      <div class="image-header">
+        <img src="{{this_user.profile.user_header.url}}">
+      </div>
+      <div class="profile">
+          <div class="detail-profile">
+            <div class="image-profil">
+               <img src="{{this_user.profile.user_photo.url}}" />
+            </div>
+            <a href="#" class="profile-name remove-link-format">{{this_user.username}}</a>
+            <p class="profile-info">{{this_user.profile.info}}</p>
+          </div>
+          <div class="profile-stats d-flex flex-row justify-content-around align-items-center">
+              <a href="" class="d-inline-block remove-link-format">
+                  {{this_user.posts.all.count}} Post{{this_user.posts.all.count|pluralize}}
+              </a>
+              <a href="" class="d-inline-block remove-link-format">
+                 <span id="count-followers">{{this_user.profile.followers.all.count}}</span> Pengikut
+              </a>
+              <a href="javascript:void(0)"class="btn btn-follow follow-this {%is_user_follow this_user.profile request%}" data-id='{{this_user.id}}' data-action='user'>{%is_user_follow this_user.profile request 'get_text'%} </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock main_header %}
+
+
+{% block main_content %}
+
+<div class="row">
+	<div class="col-md-3 order-md-1 side-left">
+        <div class="user-profile shadow">
+              <div class="title">{{this_user}} profile</div>
+              <div class="row detail-user-profile">
+                <div class="col-5">Info :</div> 
+                <div class="col-7 text-center" id="this-user-info">{{this_user.profile.info}}</div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-5">Birthday :</div> 
+                <div class="col-7 text-center" id="this-user-birthday">
+                  {% if this_user.profile.date_of_birth %}
+                  {{this_user.profile.date_of_birth}}
+                  {% else %}-
+                  {% endif %}
+                </div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-5">Location :</div> 
+                <div class="col-7 text-center" id="this-user-location">
+                {% if this_user.profile.location %}
+                  {{this_user.profile.location}}
+                  {% else %}-
+                  {% endif %}
+                </div>
+                <div class="w-100 mb-2"></div>
+
+                <div class="col-5">Website :</div> 
+                <div class="col-7 text-center" id="this-user-website">{% if this_user.profile.webiste %}
+                  {{this_user.profile.webiste}}
+                  {% else %}  -
+                  {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-5">Posts :</div> 
+                <div class="col-7 text-center">{{this_user.posts.all.count}}</div>
+                <div class="w-100 mb-2"></div>
+                <div class="col-5">Pengikut :</div> 
+                <div class="col-7 text-center">{{this_user.profile.followers.all.count}}</div>
+                <div class="w-100"></div>
+              </div>
+        </div>
+        <!-- top recommend-->
+      {%top_recommend%}
+      <!-- end top recommend-->
+    </div>
+    <div class="col-md-6 order-1 order-md-2 ">
+        
+            <!-- Posts-->
+        <div class="content-posts">
+            {% with user_thread as threads  %}
+                        {% include "snippets/container_card_threads.html" %}
+                    {% endwith %}
+              <!--if all threads has paginated-->
+                {% include "snippets/this_paginated.html" %}
+              <!--end if all threads has paginated-->
+        </div>
+        <!-- end Posts-->
+    </div>
+    <div class="col-md-3 order-2 order-md-3">
+      
+	    <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block costum_js %}
+{% include "snippets/follow.html" %}
+{% endblock costum_js %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+{% load top_recommend %}
+
+
+{% block get_in_head %}
+
+{% include "snippets/highlight/highlight_css_js.html" %}	
+
+<link rel="stylesheet" type="text/css" href="{% static "css/search.css" %}">
+{% endblock get_in_head %}
+
+
+{% block main_content %}
+
+<div class="row">
+    <!-- side left-->
+  	 <div class="col-md-3 d-none d-md-block order-md-1">
+  	 	{% if user.is_authenticated %}
+  	 		{% include "snippets/profile_card.html" %}
+  	 	{% endif %}
+        <!-- top recommend-->
+    	{%top_recommend%}
+    	<!-- end top recommend-->
+    </div>
+    <!-- end side left-->
+
+    <!-- main content-->
+    <div class="col-md-6 order-1 order-md-2 ">
+    		{% if user.is_authenticated %}
+    			<!-- Post Create-->
+	            {% include "snippets/post_create.html" %}
+	            <!-- Post CreateEnd-->
+    		{% endif %}
+            
+        
+                <!-- search-->
+		        <div class="content-search">
+               <h4>Hasil untuk: {{request.GET.s}}</h4>
+              <div class="wrap-content">
+                <ul class="nav nav-tabs" id="tab-search" role='tablist'>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#result-threads" id="threads-tab" data-toggle='tab' role='tab' aria-selected='true' aria-controls='threads'>
+                      Threads
+                    </a>   
+                  </li>
+                  <li class="nav-item"> <a class="nav-link" id="forum-tab" href="#result-forum" data-toggle='tab' role='tab' aria-controls='forum'>
+                      Forum
+                    </a></li>
+                   <li class="nav-item"> <a class="nav-link" href="#result-creator" data-toggle='tab' role='tab' aria-controls='creator' id="creator-tab">
+                      Creator
+                    </a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="content-search">
+                  <div class="tab-pane fade show active" id="result-threads" role='tabpanel' arial-labelledby='threads-tab'>
+                    {% with search_result.thread as threads  %}
+                    {% include "snippets/container_card_threads.html" %}
+                {% endwith %}
+                  </div>
+                  <div class="tab-pane fade" id="result-forum" role='tabpanel' arial-labelledby='forum-tab'>
+                    {% for forum in search_result.forum %}
+                        {{forum.name}}
+                    {% endfor %}
+                    {% for subforum in  search_result.subforum%}
+                      {{subforum.name}}
+                    {% endfor %}
+                  </div>
+                  <div class="tab-pane fade" id="result-creator" role='tabpanel' arial-labelledby='creator-tab'>
+                    {% for creator in  search_result.creator %}
+                      {{creator.user.username}}
+                    {% endfor %}
+                  </div>
+                </div>
+                
+              </div>  
+		        </div>
+		        <!-- end search-->
+
+    </div>
+    <!-- end main content-->
+
+     <!-- side right-->
+    <div class="col-md-3 order-2 order-md-3">
+    	
+	     <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+   <!-- end side right-->
+</div>
+
+{% endblock main_content %}
+
+{% block costum_js %}
+  {% include "snippets/follow.html" %}
+{% endblock costum_js %}

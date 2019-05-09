@@ -6,27 +6,38 @@
 }
 .wrap-create-post >h3{
 	text-align: center;
-	color:#fba414;
+	color:#ff6600;
 	font-weight: bold;
+}.wrap-create-post form {
+	margin-bottom: 25px;
 }
 .wrap-create-post form .form-group >label{
 	color:#333;
 	font-size: 14px;
 }
+.wrap-create-post form input#id_post_title{
+	font-weight: bold;
+	color:#333;
+}
 .bootstrap-select{
 	display: block!important;
 	margin-left: 8px!important;
 }
-
+.bootstrap-select .dropdown-menu{
+	border: 1px solid #ff6600;
+}
 .bootstrap-select .dropdown-item.active,.dropdown-item:active,.dropdown-item:hover,.dropdown-item:active:focus{
-	background-color:#fba414 !important;
+	background-color:#f59d63 !important;
 	color: #fff!important;
 	transition: ease-out .2s all;
+}
+.bootstrap-select .dropdown-item.active{
+	background-color:#ff6600 !important;
 }
 .bootstrap-select button.dropdown-toggle{
 	background-color:#fff!important;
 	font-weight: bold;
-	border: 1px solid #fba414!important ;
+	border: 1px solid #ff6600!important ;
 	color:#222;
 	border-radius: 4px;
 }
@@ -42,4 +53,31 @@
 
 form .btn-outline-orange{
 	margin-bottom: 5px;
+}
+
+.cke_toolbar_last{
+	float: right!important;
+	border-radius: 6px!important;
+	border:1px solid #ff6600!important;
+}
+.cke_toolbar_last .cke_toolgroup{
+	margin:0;
+}
+.emoji-wysiwyg-editor{
+	border-radius: 5px;
+}
+form .form-group .input-container{
+	position: relative;
+}
+.emoji-picker-icon{
+	border-right: 3px solid	#fc8207;
+	border-left: 3px solid	#fc8207;
+	padding:2px 5px;
+}
+.emoji-wysiwyg-editor{
+	border: 0!important;
+	border-radius: 0;
+	box-shadow: none;
+	padding-left: 54px!important;
+	border-bottom: 2px solid #fc8207!important;
 }

@@ -1,0 +1,51 @@
+.wrap-login{
+	width: 100%;
+	padding: 20px 15px;
+	background:#fff;
+}
+
+.title-content{
+	text-align: center;
+	text-transform: capitalize;
+	color: #333;
+	font-weight: bold;
+	margin: 0 0 30px 0;
+	display: block;
+	padding: 0 0 10px 0;
+	border-bottom: 4px solid #fc8207;
+}
+.wrap-login .form-group{
+	position: relative;
+	margin-top: 20px;
+}
+.wrap-login .form-group input{
+	height: 45px!important;
+}
+.wrap-login form label{
+	position: absolute;
+	top: 2px;
+	bottom: 0;
+	left: 15px;
+	width: 100%;
+	transition: .2s;
+	font-size: 16px;
+	font-weight: bold;
+	color: #888;
+
+}
+
+.wrap-login form .form-group input:focus,
+.wrap-login form .form-group.has-value input{
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	color: #222;
+	border-bottom: 2px solid #fc8207;
+}
+.wrap-login form .form-group input:focus + label ,
+.wrap-login form .form-group.has-value input + label {
+	bottom: 100%;
+	color: #fc8207;
+	font-size: 18px;
+	margin-top: -20px;
+}

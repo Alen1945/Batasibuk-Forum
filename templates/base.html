@@ -24,13 +24,20 @@
     {% block costumhead_js %}
         
     {% endblock costumhead_js %}
-    
+
+    {% block get_in_head %}
+        
+    {% endblock get_in_head %}
+    <link rel="shortcut icon" type="image/png" href="{% static "image/fav.png" %}"/>
   </head>
   <body>
+
     {% include "snippets/navbar.html" %}
-    
+    {% block main_header %}
+        
+    {% endblock main_header %}
     <div id="contents">
-       <div class="container">
+       <div class="container-fluid">
             {% block main_content %}
 
             {% endblock main_content %}

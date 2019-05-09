@@ -1,11 +1,104 @@
 {% extends "base.html" %}
+{% load static %}
+{% load vote_follow_filter %}
+{% load top_recommend %}
+
+{% block get_in_head %}
+	{% include "snippets/highlight/highlight_css_js.html" %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/forum_view.css" %}">
+{% endblock get_in_head %}
+
+
 
 {% block main_content %}
-	<h1>Forum {{title}}</h1>
-	{{forum_posts}}
-	{% for thread in forum_thread  %}
-		<h4><a href="{% url "thread" thread.post_slug thread.post_title %}">{{thread.post_title}}</a></h4>
-		<p>author : {{thread.author}}</p>
 
-	{% endfor %}
+<div class="row">
+	<div class="col-md-3 d-none d-md-block order-md-1">
+		{% if user.is_authenticated %}
+			{% include "snippets/profile_card.html" %}
+		{% endif %}
+        <!-- top recommend-->
+    	{%top_recommend%}
+    	<!-- end top recommend-->
+    </div>
+    <div class="col-md-6 order-1 order-md-2 ">
+
+    		{% if user.is_authenticated %}
+	    		 <!-- Post Create-->
+	            {% include "snippets/post_create.html" %}
+	            <!-- Post CreateEnd-->
+    		{% endif %}
+           
+
+            <div class="wrap-forum shadow">
+            	<h4>{{title|capfirst}}</h4>
+            	<a href="javascript:void(0)" class="btn btn-follow follow-this {%is_user_follow this_forum request%} " data-id='{{detail_forum.1}}' data-action='{{detail_forum.0}}'>{%is_user_follow this_forum request 'get_text'%}</a>
+
+            	<div class="detail-forum mt-3">
+            		<ul class="nav nav-tabs" id="tab-forum" role='tablist'>
+            			<li class="nav-item">
+            				<a class="nav-link active" href="#content-posts" id="posts-tab" data-toggle='tab' role='tab'  aria-selected='true' aria-controls='posts'>Posts</a>
+            			</li>
+            			{% if detail_forum.0 == 'forum' %}
+            				<li class="nav-item">
+            					<a class="nav-link" href="#content-subforums" id="subforums-tab" data-toggle='tab' role='tab' aria-controls='subforums'>
+            						SubForums
+            					</a>
+            				</li>
+            			{% endif %}
+            		</ul>
+            		<div class="tab-content" id="content-forum">
+            			<div class="tab-pane fade show active" id='content-posts' role='tabpanel' arial-labelledby='posts-tab'>
+            				{% with forum_thread as threads  %}
+            				    {% include "snippets/container_card_threads.html" %}
+            				{% endwith %}
+							<!--if all threads has paginated-->
+								{% include "snippets/this_paginated.html" %}
+							<!--end if all threads has paginated-->
+            			</div>
+            			<!--if forum has subforum-->
+       					{% if detail_forum.0 == 'forum' %}
+       					<div class="tab-pane fade" id="content-subforums" role='tabpanel' arial-labelledby='subforums-tab'>
+       						<div class="row p-3 ">
+       							{% for subforum in this_forum.subforums.all %}
+			                    		<div class="forum-detail col-sm-6">
+			                    			<a href="{% url "forum:subforumview" id_forum=subforum.id name_forum=subforum.name %}" class="remove-link-format"> 
+				                    		<div class="forum-info">
+				                    			<img src="/media/logo_image/logocoba.jpg" class="img-fluid forum-logo">
+				                    			<div class="forum-posts d-flex flex-column justify-content-center">
+				                    				<p>{{subforum.posts.all.count}} Post{{subforum.posts.all.count|pluralize}}</p>
+				                    			</div>
+				                    		</div>
+											<p>{{subforum.name|capfirst}}</p>
+											</a>
+										</div>
+								{%empty%}
+       							<p>Tidak Ada SubForum</p>	
+								{% endfor %}
+       						</div>
+       					</div>
+       					{% endif %}
+       					<!--end if forum has subforum-->
+            		</div>
+
+            	</div>
+
+            </div>
+    </div>
+    <div class="col-md-3 order-2 order-md-3">
+    	
+	     <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+</div>
+
 {% endblock main_content %}
+
+
+{% block costum_js %}
+	{% include "snippets/follow.html" %}
+{% endblock costum_js %}
+
+

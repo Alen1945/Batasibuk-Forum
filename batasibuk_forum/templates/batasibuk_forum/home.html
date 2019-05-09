@@ -1,27 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
-{% block costum_css %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/forum_home.css" %}">
-{% endblock costum_css %}
+{% load top_recommend %}
+
+{% block get_in_head %}
+
+	<link rel="stylesheet" type="text/css" href="{% static "css/forum_home.css" %}">
+	
+{% endblock get_in_head %}
+
 
 
 {% block main_content %}
 
 <div class="row">
 	<div class="col-md-3 d-none d-md-block order-md-1">
-      	{% include "snippets/profile_card.html" %}
-        {% include "snippets/online_creator.html" %}
+		{% if user.is_authenticated %}
+			{% include "snippets/profile_card.html" %}
+		{% endif %}
+      	
+        <!-- top recommend-->
+    	{%top_recommend%}
+    	<!-- end top recommend-->
     </div>
     <div class="col-md-6 order-1 order-md-2 ">
-
-            <!-- Post Create-->
-            {% include "snippets/post_create.html" %}
-            <!-- Post CreateEnd-->
+    		{% if user.is_authenticated %}
+    			<!-- Post Create-->
+            	{% include "snippets/post_create.html" %}
+            	<!-- Post CreateEnd-->
+    		{% endif %}
+           
 
             <div class="chanels-card">
             {% for category in categorys  %}
 				<div class="chanel-detail shadow">
-                 	<img src="/media/logo_image/190331210525.png" alt="user" class="profile-photo" />
+                 	<img src="/media/logo_image/190331210525.png" alt="user" class="chanel-logo" />
                   <div class="channel-info">
                   	<a href="{% url "channel" id_channel=category.id name_channel=category.name%}" class="remove-link-format">
                     <h5 class="channel-title">Chanels {{category.name|capfirst}}</h5>
@@ -29,25 +41,35 @@
                     </a>
                   </div>
                   <div class="hr-custom clearfix"></div>
-                  <div class="channel-forum">
+                  <div class="chanel-forum container-fluid">
                     	<h6>{{category.name|capfirst}} Forums </h6>
+                    	<div class="row">
                     	{% for forum in category.forums.all %}
-						<a href="{% url "forum:forumview" id_forum=forum.id name_forum=forum.name %}"> <p>Forum {{forum.name}}</p></a>
-							<p>
-								<span>{{forum.forum_posts.all.count}} Post{{forum.forum_posts.all.count|pluralize}}</span>
-								<span>{{forum.subforums.all.count}} Subforum{{forum.subforums.all.count|pluralize}}</span>
-								<ul>
-									{% for sub in forum.subforums.all%}
-										{% if forloop.counter < 4 %}
-											<li><a href="{% url "forum:subforumview" id_forum=sub.id name_forum=sub.name %}">{{sub.name|capfirst}} ({{sub.subforum_posts.all.count }} post{{sub.subforum_posts.all.count|pluralize}})</a></li>
-										{% endif %}
-										{% if forloop.counter == 4 %}
-											<li>...</li>
-										{% endif %}
-									{% endfor %}
-								</ul>
-							</p>
+	                    		<div class="forum-detail col-sm-6">
+	                    			<a href="{% url "forum:forumview" id_forum=forum.id name_forum=forum.name %}" class="remove-link-format"> 
+		                    		<div class="forum-info">
+		                    			<img src="/media/logo_image/logocoba.jpg" class="img-fluid forum-logo">
+		                    			<div class="forum-posts d-flex flex-column justify-content-center">
+		                    				<p>{{forum.posts.all.count}} Post{{forum.posts.all.count|pluralize}}</p>
+		                    				<p>{{forum.subforums.all.count}} SubForum{{forum.subforum.all.count|pluralize}}</p>
+		                    			</div>
+		                    		</div>
+									<p>{{forum.name|capfirst}}</p>
+									</a>
+								</div>
 						{% endfor %}
+						<div class="col-sm-6 d-flex align-items-center justify-content-center">
+							<a href="{% url "channel" id_channel=category.id name_channel=category.name %}" class="link-all-forum">
+								<p>
+									<i class="fa fa-arrow-right"></i>
+									See All Forum
+								</p>
+									
+							</a>
+						</div>
+						
+						</div>
+						
                   </div>
                   
                 </div>
@@ -56,52 +78,16 @@
    
     </div>
     <div class="col-md-3 order-2 order-md-3">
-    	<div class="trend-threads-card shadow">
-	      <h6>Trends For You</h6>
-	      <div class="trend-thread">
-	          <a href="#" class="remove-link-format">
-	          	<p class="threads-title">Cinta yang Bodoh</p >
-	          	<p class="text-muted">Admin on Forum-puisi</p>
-	          </a>
-	      </div>
-	      <div class="trend-thread">
-	          <a href="#" class="remove-link-format">
-	          	<p class="threads-title">Indonesia dalam masa yang sangat pelik</p >
-	          	<p class="text-muted">Admin on Forum-News</p>
-	          </a>
-	      </div>
-	      <div class="trend-thread">
-	          <a href="#" class="remove-link-format">
-	          	<p class="threads-title" >Cinta yang Bodoh</p >
-	          	<p class="text-muted">Admin on Forum-puisi</p>
-	          </a>
-	      </div>
-	    </div>
-	    <div class="suggest-forum-card">
-	      <h6 class="grey">Forum Recomendations</h6>
-	      <div class="follow-forum">
-	          <p><a href="#"class='remove-link-format'>Puisi</a></p>
-	          <a class="remove-link-format" href="#" >Ikuti</a>
-	      </div>
-	      <div class="follow-forum">
-	          <p><a href="#"class='remove-link-format'>Etnomatematika</a></p>
-	          <a class="remove-link-format" href="#" >Ikuti</a>
-	      </div>
-	      <div class="follow-forum">
-	          <p><a href="#"class='remove-link-format'>Forum 1</a></p>
-	          <a class="remove-link-format" href="#" >Ikuti</a>
-	      </div>
-	      <div class="follow-forum">
-	          <p><a href="#"class='remove-link-format'>Forum 2</a></p>
-	          <a class="remove-link-format" href="#" >Ikuti</a>
-	      </div>
-	      <div class="follow-forum">
-	          <p><a href="#"class='remove-link-format'>Forum anime</a></p>
-	          <a class="remove-link-format" href="#" >Ikuti</a>
-	      </div>
-	    </div>
+    	
+	     <!--forum recommend-->
+      {%forum_recommend request%}
+       <!--end forum recommend-->
 	   	{% include "snippets/footer.html" %}
 	 </div>
 </div>
 
 {% endblock main_content %}
+{% block costum_js %}
+	{% include "snippets/follow.html" %}
+{% endblock costum_js %}
+

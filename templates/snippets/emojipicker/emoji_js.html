@@ -1,0 +1,18 @@
+ {% load static %}
+ <!-- Begin emoji-picker JavaScript -->
+    <script src="{% static "vendor/emojipicker/js/config.js" %}"></script>
+    <script src="{% static "vendor/emojipicker/js/util.js" %}"></script>
+    <script src="{% static "vendor/emojipicker/js/jquery.emojiarea.js"%}"></script>
+    <script src="{% static "vendor/emojipicker/js/emoji-picker.js" %}"></script>
+    <script>
+      $(function() {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+          emojiable_selector: '[data-emojiable=true]',
+          assetsPath: '{% static "vendor/emojipicker/img" %}',
+          popupButtonClasses: 'fa fa-smile-o'
+        });
+        window.emojiPicker.discover();
+      });
+    </script>
+ <!-- End emoji-picker JavaScript -->

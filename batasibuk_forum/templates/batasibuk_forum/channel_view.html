@@ -1,5 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
+{% load top_recommend %}
+
+{% block get_in_head %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/channel_view.css" %}">
+{% endblock get_in_head %}
+
+
 
 {% block main_content %}
-	<h1>Channel {{title}}</h1>
+
+<div class="row">
+	<!-- side left-->
+	<div class="col-md-3 d-none d-md-block order-md-1">
+		{% if user.is_authenticated %}
+			{% include "snippets/profile_card.html" %}
+		{% endif %}
+      	
+        <!-- top recommend-->
+    	{%top_recommend%}
+    	<!-- end top recommend-->
+    </div>
+    <!-- end side left-->
+
+
+    <!-- Main Content-->
+    <div class="col-md-6 order-1 order-md-2 ">
+    		{% if user.is_authenticated %}
+    			<!-- Post Create-->
+	            {% include "snippets/post_create.html" %}
+	            <!-- Post CreateEnd-->
+    		{% endif %}
+            
+
+            <div class="wrap-channel container-fluid shadow">
+            	<h4>Channel {{title}}</h4>
+	            <div class="row p-2">
+	            	{% with channel_forums as forums  %}
+	            	    {% include "snippets/container_card_forum.html" %}
+	            	{% endwith %}
+	            </div>	
+            </div>
+   
+    </div>
+    <!-- Main Content-->
+
+    <!-- Side right-->
+    <div class="col-md-3 order-2 order-md-3">
+    	
+	     <!--forum recommend-->
+      		{%forum_recommend request%}
+       	<!--end forum recommend-->
+	   	{% include "snippets/footer.html" %}
+	 </div>
+	 <!-- end side right-->
+</div>
+
 {% endblock main_content %}
+
+{% block costum_js %}
+    {% include "snippets/follow.html" %}
+{% endblock costum_js %}

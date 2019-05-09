@@ -1,24 +1,352 @@
 {% extends "base.html" %}
+{% load static %}
 
+{% block get_in_head %}
+	{% include "snippets/date_picker/datepicker_css.html" %}
+  	{% include "snippets/emojipicker/emoji_css.html" %}
+  	{% include "snippets/cropper/cropper_css_js.html" %}
+
+  	<link rel="stylesheet" type="text/css" href="{% static "css/register.css" %}">
+
+{% endblock get_in_head %}
 
 
 {% block main_content %}
-	
-	<form method="post">
-		{% csrf_token %}
-		{% for form in form  %}
-		<div class="form-group">
-			<label for="{{form.id_for_label}}" class="col-form-label">{{form.label}}</label>
-			{{form}}
-			{% if form.errors %}
-				{% for error in form.errors %}
-					<small class="text-muted d-block"><span class="text-danger">*{{error}}</span></small>
-				{% endfor %}
-			{% else %}
-			{% endif %}
+
+	<div class="row">
+		<div class="col-md-8 col-lg-7 mx-auto">
+			<!-- wrap-register -->
+			<div class="wrap-register shadow">
+				<h2 class="title-content text-center">Get in batasibuk</h2>
+				<div class="error mx-auto">
+				 {% if form.errors %}
+					{% for error in form.non_field_errors  %}
+						<div class="alert alert-danger alert-dismiss">
+							<button type="button" class="close" data-dismiss='alert' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<p>{{error}}</p>
+						</div>
+					{% endfor %}
+				 {% endif %}
+				</div>
+				<form method="post" enctype="multipart/form-data" id='form-register'>
+				{% csrf_token %}
+				<!--nav-->
+				<nav class="nav nav-tabs" id="myTab" role="tablist">
+				  <a class="nav-item nav-link active custom-nav-item" id="nav-step1-tab" data-toggle="tab" href="#nav-step1" role="tab" aria-controls="nav-step1" aria-selected="true">Step 1</a>
+				  <a class="nav-item nav-link custom-nav-item" id="nav-step2-tab" data-toggle="tab" href="#nav-step2" role="tab" aria-controls="nav-step2" aria-selected="false">Step 2</a>
+				  <a class="nav-item nav-link custom-nav-item" id="nav-step3-tab" data-toggle="tab" href="#nav-step3" role="tab" aria-controls="nav-step3" aria-selected="false">Step 3</a>
+				</nav>
+				<!--akhir nav-->
+
+				<!--wrapcontent-->
+				<div class="tab-content" id="nav-tabContent">
+					<!--content 1-->
+				  <div class="tab-pane fade show active" id="nav-step1" role="tabpanel" aria-labelledby="nav-step1-tab">
+				  	<h6>Step 1 of 3 (Wajib)</h6>
+
+				  	{% with form.username as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+						{% if f.errors %}
+							{% for error in f.errors %}
+								<p class="text-muted d-block"><span class="text-danger">*{{error}}</span></p>
+							{% endfor %}
+						{% else %}
+							<p class="text-muted d-block">Username hanya boleh mengandung karakter, angka, dan karakter @/./+/-/, tanpa spasi</p>
+						{% endif %}
+
+					  </div> 
+				  	{% endwith %}
+				  	{% with form.email as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+						{% if f.errors %}
+							{% for error in f.errors %}
+								<p class="text-muted d-block"><span class="text-danger">*{{error}}</span></p>
+							{% endfor %}
+						{% else %}
+							<p class="text-muted d-block">Masukan Email yang valid</p>
+						{% endif %}
+					  </div> 
+				  	{% endwith %}
+
+				  	{% with form.password1 as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+						{% if f.errors %}
+							{% for error in f.errors %}
+								<p class="text-muted d-block"><span class="text-danger">*{{error}}</span></p>
+							{% endfor %}
+							{% else %}
+							<p class="text-muted d-block">Gunakan password yang berbeda dari informasi pribadi anda</p>
+						{% endif %}
+					  </div> 
+				  	{% endwith %}
+
+				  	{% with form.password2 as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+						{% if f.errors %}
+							{% for error in f.errors %}
+								<p class="text-muted d-block"><span class="text-danger">*{{error}}</span></p>
+							{% endfor %}
+						{% else %}
+							<p class="text-muted d-block">Masukan lagi password yang sama</p>
+						{% endif %}
+					  </div> 
+				  	{% endwith %}
+
+					<div class="text-right mr-5">
+						<a class="btn btn-outline-orange btn-tab-custom " id="nav-step2-tab" data-toggle="tab" href="#nav-step2" role="tab" aria-controls="nav-step2" disabled>Selanjutnya</a>
+					</div>
+				  </div>
+				  <!--akhircontent1-->
+
+				  <!--content2-->
+				  <div class="tab-pane fade" id="nav-step2" role="tabpanel" aria-labelledby="nav-step2-tab">
+				  	<h6 class="mb-5">Step 2 of 3 (Opsional)</h6>
+				  	{% with form.info as f   %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						<p class="input-container">{{f}}</p>
+						<label for="{{f.id_for_label}}" class="form-check-label">{{f.label}}</label>
+					  </div>  
+				  	{% endwith %}
+				  	{% with form.date_of_birth as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+					  </div> 
+				  	{% endwith %}
+				  	{% with form.gender  as f %}
+				  	  <div class="form-check-inline mx-md-4 mt-2">
+				  	  	<label for="{{f.id_for_label}}" class="form-check-label">{{f.label}}</label>
+						{{f}}
+					  </div>  
+				  	{% endwith %}
+				  	{% with form.location as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+					  </div> 
+				  	{% endwith %}
+				  	{% with form.website as f %}
+				  	  <div class="form-group mx-md-4 form-input-costum">
+						{{f}}
+						<label for="{{f.id_for_label}}" class="col-form-label">{{f.label}}</label>
+					  </div> 
+				  	{% endwith %}
+				  	<div class="text-right mr-5">
+						<a class="btn btn-outline-orange btn-tab-custom " id="nav-step3-tab" data-toggle="tab" href="#nav-step3" role="tab" aria-controls="nav-step3">Lewati</a>
+					</div>
+				  </div>
+				  <!--akhircontent2-->
+
+				  <!--content3-->
+				  <div class="tab-pane fade" id="nav-step3" role="tabpanel" aria-labelledby="nav-step3-tab">
+				  	<h6 class="mb-4">Step 3 of 3 (Opsional)</h6>
+				  	<div class="row"><div class="col-md-10 mx-auto">
+				  	<div id="wrap-user-photo">
+				  		{{form.x_p}}{{form.y_p}}{{form.width_p}}{{form.height_p}}
+					  	{% with form.user_photo as f %}
+					  	  <div class="form-group user-photo">
+					  	  	<label for="{{f.id_for_label}}" class="col-form-label btn btn-primary"><i class="fa fa-plus"></i> {{f.label}}</label>
+					  	  	{{f}}
+					  	  	<img id="image-user" src="/media/profile_image/default_profile_normal.png">
+						  </div>
+					  	{% endwith %}
+				  	</div>
+				  	</div></div>
+				  	<div class="text-right mr-5">
+				  	<a href="#modal-register" class="btn btn-outline-orange trigger-btn" data-toggle="modal">Selesai</a>
+				 	</div>
+				 	 <!--wrap modal-->
+				 	<div id="modal-register" class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="img-logo ml-auto">
+										<img src="{% static "image/logo.png" %}">
+									</div>
+									<button type="button" class="close" data-dismiss='modal' aria-label='close'>
+										<span>&times;</span>
+									</button>
+								</div>
+								<div class="modal-body text-center">
+									<p id="warning-register" class="alert alert-warning">Bila semua data pada Step 1 telah terisi silahkan klik tombol Daftar</p>
+									<button id="btn-register" class="btn btn-orange btn-daftar" type="submit" >Daftar</button>
+								</div>
+							</div>
+						</div>
+					</div> 
+					<!--akhir wrap modal-->
+				  	
+				  </div>
+				  <!--akhircontent3-->
+				</div>
+				<!--akhirwrapcontent-->
+				</form>
+
+				<div class="border-top border-secondary mt-3 text-center pt-3 font-weight-bold" style="font-size:15px"> Sudah Punya akun <a href="{% url 'login' %}" class="text-primary"><i class="fa fa-arrow-right"></i> Masuk</a></div>
+
+
+				<div class="img-logo mx-auto mt-3">
+				<img src="{% static "image/logo.png" %}">
+				</div>
+				<!-- modal crop-->
+				<div class="modal fade" id="modalcrop">
+					<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-body" style="position:relative;padding:0">
+							<img src="" id='image-to-crop' style="width:auto;height:80vh">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default js-zoom-in"><i class="fa fa-search-plus"></i></button>
+							<button type="button" class="btn btn-default js-zoom-out mr-auto"><i class="fa fa-search-minus"></i></button>
+							<button type="button" class="btn btn-primary js-crop-and-upload" data-dismiss='modal'>Crop dan Upload</button>
+						</div>
+					</div>
+					</div>
+				</div>
+				<!-- ahir modal crop-->
+			</div>
+			<!-- ahir wrap-register -->
 		</div>
-		{% endfor %}
-	<button class="btn btn-primary" type="submit">Daftar</button>
-	</form>
-	<div class="border-top border-secondary mt-3">Punya akun <a href="{% url 'login' %}" class="text-primary">Masuk</a></div>
+	</div>
+	
 {% endblock main_content %}
+
+{% block costum_js %}
+	{% include "snippets/emojipicker/emoji_js.html" %}
+	{% include "snippets/date_picker/datepicker_js.html" %}
+
+	<script type="text/javascript">
+
+	$(document).ready(function(){
+    	$('.nav-item.register').addClass('active');
+  	});
+
+	//input text
+	$('.form-input-costum .form-control').keyup(function(){
+		if($(this).val().trim()){
+			$(this).parent().addClass('has-value')
+		}else{
+			$(this).parent().removeClass('has-value')
+		}
+	})
+	$('.form-input-costum .form-control').change(function(){
+		if($(this).val().trim()){
+			$(this).parent().addClass('has-value')
+		}else{
+			$(this).parent().removeClass('has-value')
+		}
+	})
+
+	// tab show
+	$('.btn-tab-custom').click(function (e) {
+		let id=$(this).attr('href')
+		$('[href="'+id+'"').tab('show')
+	});
+
+	//btn-daftar
+	$('#warning-register').click(function(){
+		$('#btn-register').attr('disabled','enabled');
+	});
+
+
+	
+	//input-file
+	let user_p=$('.user-photo')[0]
+	let user_h=$('.user-header')[0]
+	let _height=200
+	let _width=200
+	let ratio=1/1
+	$('input[type=file]').change(function(ev){
+		if(this.files && this.files[0]){
+			let tmp_file=URL.createObjectURL(ev.target.files[0]);
+			$(this).next('img').attr('src',tmp_file);
+			$('#image-to-crop').attr('src',tmp_file);
+			$('#modalcrop').modal('show')
+			_is_image=$(this)
+			previews=$(this).parent()
+		}
+	});
+
+	//handle crop
+	let image=$('#image-to-crop')[0];
+	let cropBoxData;
+	let canvasData;
+	function each(arr, callback) {
+      var length = arr.length;
+      var i;
+
+      for (i = 0; i < length; i++) {
+        callback.call(arr, arr[i], i, arr);
+      }
+
+      return arr;
+    }
+
+	$('#modalcrop').on('shown.bs.modal',function(){
+		cropper =new Cropper(image,{
+			aspectRatio:ratio,
+        	dragMode: 'move',
+			ready:function(){
+				let clone=this.cloneNode();
+				clone.className='';
+				clone.id='';
+				_is_image.next('img').remove();
+				each(previews,function(elem){
+					elem.appendChild(clone.cloneNode());
+				});
+				cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+
+			},
+			crop:function(ev){
+				let data=ev.detail;
+				let cropper=this.cropper;
+				let imageData=cropper.getImageData();
+				let previewAspectRatio=data.width/data.height;
+				each(previews,function(elem){
+				 let previewImage = elem.getElementsByTagName('img').item(0);
+	              let previewWidth = elem.offsetWidth;
+	              let previewHeight = previewWidth / previewAspectRatio;
+	              let imageScaledRatio = data.width / previewWidth;
+	              elem.style.height = previewHeight + 'px';
+	              previewImage.style.width = imageData.naturalWidth / imageScaledRatio + 'px';
+	              previewImage.style.height = imageData.naturalHeight / imageScaledRatio + 'px';
+	              previewImage.style.marginLeft = -data.x / imageScaledRatio + 'px';
+	              previewImage.style.marginTop = -data.y / imageScaledRatio + 'px';
+
+				})
+				
+			}
+
+		})
+	}).on('hidden.bs.modal',function(){
+		let cropData=cropper.getData();
+		$('#id_x_p').val(cropData['x']);
+		$('#id_y_p').val(cropData['y']);
+		$('#id_height_p').val(cropData['height']);
+		$('#id_width_p').val(cropData['width']);
+		cropBoxData=cropper.getCropBoxData();
+		canvasData=cropper.getCropBoxData();
+		cropper.destroy()
+	});
+	$('.js-zoom-in').click(function(){
+		cropper.zoom(.2)
+		
+	});
+	$('.js-zoom-out').click(function(){
+		cropper.zoom(-0.2)
+	});
+
+
+	</script>
+
+
+{% endblock costum_js %}
+

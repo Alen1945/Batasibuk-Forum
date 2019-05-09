@@ -16,17 +16,19 @@ class NewPostForm(forms.ModelForm):
 				for subforum in forum.subforums.all():
 					choices.append((f'sfr-{subforum.id}',subforum.name))
 		self.fields['select_forum'].choices=choices
-		self.fields['post_title'].widget.attrs={'class':'form-control','placeholder':'Masukan Judul'}
+		self.fields['post_title'].widget.attrs={'class':'form-control','placeholder':'Masukan Judul','data-emojiable':"true",'style':'position:relative'}
 		self.fields['post_title'].label="Judul"
 		self.fields['body'].label="Detail"
 		self.fields['body'].widget.attrs={'class':'form-control','style':'width:100%;'}
 		self.fields['select_forum'].label='Forum'
 		self.fields['select_forum'].widget.attrs={'class':'selectpicker','data-live-search':'true'}
+
+
 class NewCommentForm(forms.ModelForm):
+	id_parent_comment=forms.IntegerField(widget=forms.HiddenInput(),required=False)
 	class Meta:
 		model=Comment
-		fields=['body']
+		fields=['body','id_parent_comment']
 	def __init__(self,*args,**kwargs):
 		super().__init__(*args,**kwargs)
 		self.fields['body'].widget.attrs={'class':'form-control','placeholder':'Berikan Komentar untuk Thread ini'}
-

@@ -1,0 +1,15 @@
+{% for forum in forums %}
+<div class="detail-forum col-sm-6 pt-2 shadow">
+	<a href="{% url "forum:forumview" id_forum=forum.id name_forum=forum.name %}" class="remove-link-format"> 
+	<div class="forum-info">
+		<img src="/media/logo_image/logocoba.jpg" class="img-fluid forum-logo">
+		<div class="forum-posts d-flex flex-column justify-content-center">
+			<p>{{forum.posts.all.count}} Post{{forum.posts.all.count|pluralize}}</p>
+			<p>{{forum.subforums.all.count}} SubForum{{forum.subforum.all.count|pluralize}}</p>
+		</div>
+	</div>
+	</a>
+	<p><a href="{% url "forum:forumview" forum.id forum.name %}">{{forum.name|capfirst}}</a></p>
+	<a href="{% url "forum:forumview" forum.id forum.name %}" class="btn btn-outline-orange d-block mb-2">See All Post and All SubForums</a>
+</div>
+{% endfor %}

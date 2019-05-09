@@ -1,0 +1,11 @@
+{% load vote_follow_filter %}
+<div class="suggest-forum-card">
+  <h6 class="grey">Forum Recomendations</h6>
+  {% for forum in forums  %}
+  	<div class="follow-forum">
+      <p><a href="{% url "forum:forumview" forum.id forum.name %}"class='remove-link-format'>{{forum.name}}</a></p>
+      <a href="javascript:void(0)" class="btn btn-follow follow-this {%is_user_follow forum request %} " data-id='{{forum.id}}' data-action='forum'>{%is_user_follow forum request 'get_text'%}</a>
+  </div>
+  {% endfor %}
+  
+</div>

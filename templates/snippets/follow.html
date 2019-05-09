@@ -1,0 +1,31 @@
+<script type="text/javascript">
+		function follow_this(e){
+			data_id=e.attr('data-id')
+			follow_for=e.attr('data-action')
+			$.ajax({
+				type:'POST',
+				url:'/api/follow/'+data_id+'/'+follow_for,
+				data:{
+					csrfmiddlewaretoken:'{{csrf_token}}',
+				},
+				data_type:'json',
+				success:function(data){
+					if(data.redirect_login){
+						window.location.replace('/login?next=/api/follow/'+data_id+'/'+follow_for+'?next='+window.location.href)
+					}
+					e.toggleClass('active')
+					if(data.follow_state_action){
+						e.html(data.follow_state_action)
+					}
+					if($('#count-followers')[0]){
+						$('#count-followers').text(data.sum_follow)
+					}
+				}
+			})
+		};
+
+		$('.follow-this').click(function(e){
+			e.preventDefault()
+			follow_this($(this))
+		});
+</script>

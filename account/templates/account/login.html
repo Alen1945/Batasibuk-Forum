@@ -1,21 +1,72 @@
 {% extends "base.html" %}
+{% load static %}
+
+
+{% block get_in_head %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
+{% endblock get_in_head %}
 
 {% block main_content %}
-<h1>Login</h1>
 
-<form method="post">
-	{% csrf_token %}
-	{% for form in form %}
-	<div class="form-group">
-		<label for="{{form.id_for_label}}" class="col-form-label">
-			{{form.label}}
-		</label>
-		{{form}}
-	</div>	
-	{% endfor %}
-	<button type="submit" class="btn btn-primary">Login</button>
-</form>
-<div class="border-top border-secondary mt-3">
-		Belum Punya Akun <a href="{% url "register" %}" class="text-primary">Sign Up</a>
+<div class="row">
+<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+<div class="wrap-login shadow">
+
+	<h2 class="title-content text-center">Log in batasibuk</h2>
+
+	{% if form.errors %}
+			{% for error in form.non_field_errors  %}
+				<div class="alert alert-danger alert-dismiss">
+					<button type="button" class="close" data-dismiss='alert' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<p>{{error}}</p>
+				</div>
+			{% endfor %}
+		{% endif %}
+	<form method="post">
+		{% csrf_token %}
+		{% for form in form %}
+		<div class="form-group mx-md-4 mx-auto">
+			{{form}}
+			<label for="{{form.id_for_label}}" class="col-form-label">
+				{{form.label}}
+			</label>
+			{% if form.errors %}
+					{% for error in form.errors %}
+						<small class="text-muted d-block"><span class="text-danger">*{{error}}</span></small>
+					{% endfor %}
+			{% endif %}
+		</div>	
+		{% endfor %}
+		<button type="submit" class="btn btn-orange ml-4">Login</button>
+	</form>
+
+	<div class="border-top border-secondary mt-3 text-center pt-3 font-weight-bold" style="font-size:17px"> Belum Punya Akun <a href="{% url "register" %}" class="text-primary"><i class="fa fa-arrow-right"></i> Daftar</a></div>
+
+	<div class="img-logo mx-auto mt-3">
+	<img src="{% static "image/logo.png" %}">
+	</div>
+
+
+
+</div>
+</div>
 </div>
 {% endblock main_content %}
+
+{% block costum_js %}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+   	 $('.nav-item.login').addClass('active');
+  	});
+
+
+	$('.form-control').keyup(function(){
+		if($(this).val().trim()){
+			$(this).parent().addClass('has-value')
+		}else{
+			$(this).parent().removeClass('has-value')
+		}
+	});
+</script>	
+{% endblock costum_js %}

@@ -1,0 +1,26 @@
+{% for thread in threads %}
+	<div class="post-container">
+        <div class="post-detail shadow">
+         	<img src="{{thread.author.profile.user_photo.url}}" alt="user" class="profile-photo" />
+          <div class="user-info">
+            <h5><a href="{% url "creator" thread.author.username %}" class="profile-link">{{thread.author}}</a> <i class="fa fa-caret-right"></i> <a href="{% url "forum:forumview" thread.content_forum_post.id thread.content_forum_post.name%}" class="name-forum">{{thread.content_forum_post.name}}</a></h5>
+            <p class="text-muted">{{thread.created}}</p>
+          </div>
+          <div class="hr-custom clearfix"></div>
+          <div class="post-text pl-md-2 pl-lg-4">
+          	<a href="{% url "thread" thread.post_slug thread.post_title %}" class="remove-link-format">
+          		<p class="thread-title">{{thread.post_title}}</p>
+                <p class="d-block">{{thread.body|truncatewords_html:33|safe}}</p>
+                <div class="reaction">
+                     <span class="text-green d-block-inline"><i class="fa fa-eye"></i> 2</span>
+                    <span class="text-success d-block-inline"><i class="fa fa-thumbs-up"></i> 2</span>
+                    <span class="text-danger d-block-inline"><i class="fa fa-thumbs-down"></i> 0</span>
+                    <span class="text-primary d-block-inline"><i class="fa fa-comment"></i> 0</span>
+              	 </div>
+        	</a>
+          </div>
+        </div>
+    </div>
+    {%empty%}
+		<h4 class="text-warning text-center p-4">Tidak Ada Thread</h4>
+{% endfor %}

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('fonts/fontawesome-webfont.eot?v=4.7.0');
+  src: url('fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 .cke_reset {
     margin: 0;
@@ -68,10 +76,10 @@
 }
 .cke_chrome {
     display: block;
-    padding: 0;
-    border: 1px solid #fba414;
+    padding: 5px;
+    border: 1px solid #ff6600;
     box-shadow: 0 0 6px 1px rgba(172, 181, 194, 0.56);
-    border-radius: 6px;
+    border-radius: 3px;
     overflow: hidden;
 }
 .cke_inner {
@@ -91,20 +99,24 @@
     overflow: hidden;
 }
 .cke_top {
-    border-bottom: 1px solid #e1e1e1;
-    padding: 6px 8px 2px;
+    padding: 6px 8px 5px;
     white-space: normal;
-    color: #fff;
-    background: #fba414;
+    background: #fff;
+    border-bottom: 2px solid #ff6600;
+    border-top: 1px solid rgba(172, 181, 194, 0.56); 
+    box-shadow: 5px 12px 10px 3px rgba(172, 181, 194, 0.56);
 }
 .cke_float .cke_top {
     border: 1px solid #b6b6b6;
     border-bottom-color: #999;
 }
 .cke_bottom {
-    padding: 6px 8px 2px;
-    position: relative;
-    background: #2b579a;
+    padding: 6px 8px 5px;
+    white-space: normal;
+    background: #fff;
+    border-top: 2px solid #ff6600;
+    border-bottom: 1px solid rgba(172, 181, 194, 0.56); 
+    box-shadow: 0 -13px 10px 3px rgba(172, 181, 194, 0.56);
 }
 .cke_browser_ios .cke_contents {
     overflow-y: auto;
@@ -295,15 +307,17 @@ a:hover.cke_colorauto, a:hover.cke_colormore, a:focus.cke_colorauto, a:focus.cke
     margin-left: 6px;
     margin-right: 0;
 }
+
 a.cke_button {
     display: inline-block;
-    height: 16px;
+    height: 18px;
     padding: 2px;
     outline: 0;
     cursor: default;
     float: left;
     border: 1px solid transparent;
-    margin: 1px;
+    margin: 2px;
+    
 }
 .cke_rtl .cke_button {
     float: right;
@@ -313,20 +327,21 @@ a.cke_button {
     padding: 2px;
 }
 .cke_button_on {
-    background: #c2d5f2;
+    background:rgba(249, 194, 140, 0.45);
+    border-radius: 3px!important;
 }
 .cke_hc .cke_button_on, .cke_hc a.cke_button_off:hover, .cke_hc a.cke_button_off:focus, .cke_hc a.cke_button_off:active, .cke_hc a.cke_button_disabled:hover, .cke_hc a.cke_button_disabled:focus, .cke_hc a.cke_button_disabled:active {
     border-width: 3px;
     padding: 1px 3px;
 }
 .cke_button_disabled .cke_button_icon {
-    opacity: .3;
+    opacity: .9;
 }
 .cke_hc .cke_button_disabled {
-    opacity: .5;
+    opacity: .8;
 }
 a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active, a.cke_button_disabled:hover, a.cke_button_disabled:focus, a.cke_button_disabled:active {
-    background: #d5e1f2;
+    background: rgba(249, 194, 140, 0.45);
 }
 .cke_button_icon {
     cursor: inherit;
@@ -486,8 +501,7 @@ a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active, a.cke_b
     padding: 4px 0;
 }
 .cke_menubutton_disabled:hover .cke_menubutton_icon, .cke_menubutton_disabled:focus .cke_menubutton_icon, .cke_menubutton_disabled:active .cke_menubutton_icon {
-    opacity: .3;
-    filter: alpha(opacity=30);
+    opacity: 1;
 }
 .cke_menubutton_label {
     padding: 0 5px;
@@ -497,7 +511,7 @@ a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active, a.cke_b
     color: #444;
 }
 .cke_menubutton_disabled .cke_menubutton_label {
-    opacity: .3;
+    opacity: .6;
     filter: alpha(opacity=30);
 }
 .cke_menubutton_on {
@@ -642,7 +656,7 @@ a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active, a.cke_b
     margin-top: 3px;
 }
 .cke_combo_disabled .cke_combo_inlinelabel, .cke_combo_disabled .cke_combo_open {
-    opacity: .3;
+    opacity: .6;
 }
 .cke_path {
     float: left;
@@ -665,7 +679,7 @@ a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active, a.cke_b
 }
 a.cke_path_item:hover, a.cke_path_item:focus, a.cke_path_item:active {
     background-color: #fff;
-    color: #2b579a;
+    color: #ff6600;
 }
 .cke_hc a.cke_path_item:hover, .cke_hc a.cke_path_item:focus, .cke_hc a.cke_path_item:active {
     border: 2px solid;
@@ -673,7 +687,7 @@ a.cke_path_item:hover, a.cke_path_item:focus, a.cke_path_item:active {
 }
 .cke_button__source_label, .cke_button__sourcedialog_label {
     display: inline;
-}
+}  
 .cke_combo__fontsize .cke_combo_text {
     width: 30px;
 }
@@ -697,6 +711,24 @@ a.cke_path_item:hover, a.cke_path_item:focus, a.cke_path_item:active {
 }
 legend.cke_voice_label {
     display: none;
+}
+.cke_button_icon{
+    display: inline-block;
+    font: normal normal normal 16px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    line-height: 15px;
+    color:#333;
+    margin:1px 2px;
+}
+.cke_button__codesnippet_icon{
+    background:url()!important;
+}
+.cke_button__codesnippet_icon:before {
+  content: "\f121";
 }
 .cke_button__about_icon {
     background: url(icons.png) no-repeat 0 -0px!important;
@@ -723,7 +755,11 @@ legend.cke_voice_label {
     background: url(icons.png) no-repeat 0 -168px!important;
 }
 .cke_button__bold_icon {
-    background: url(icons.png) no-repeat 0 -192px!important;
+    background: url()!important;
+}
+.cke_button__bold_icon:before {
+  content: "\f032";
+  font-weight: bold;
 }
 .cke_rtl .cke_button__bulletedlist_icon, .cke_mixed_dir_content .cke_rtl .cke_button__bulletedlist_icon {
     background: url(icons.png) no-repeat 0 -216px!important;
@@ -774,10 +810,13 @@ legend.cke_voice_label {
     background: url(icons.png) no-repeat 0 -576px!important;
 }
 .cke_button__image_icon {
-    background: url(icons.png) no-repeat 0 -600px!important;
+    background: url()!important;
+}
+.cke_button__image_icon:before {
+ content: "\f03e";
 }
 .cke_button__imagebutton_icon {
-    background: url(icons.png) no-repeat 0 -624px!important;
+    background: url(iconss.png) no-repeat 0 -576px!important;
 }
 .cke_rtl .cke_button__indent_icon, .cke_mixed_dir_content .cke_rtl .cke_button__indent_icon {
     background: url(icons.png) no-repeat 0 -648px!important;
@@ -786,25 +825,45 @@ legend.cke_voice_label {
     background: url(icons.png) no-repeat 0 -672px!important;
 }
 .cke_button__italic_icon {
-    background: url(icons.png) no-repeat 0 -696px!important;
+    background: url()!important;
+}
+.cke_button__italic_icon:before {
+  content: "\f033";
+  font-weight: bold;
 }
 .cke_button__justifyblock_icon {
-    background: url(icons.png) no-repeat 0 -720px!important;
+    background: url()!important;
 }
 .cke_button__justifycenter_icon {
-    background: url(icons.png) no-repeat 0 -744px!important;
+    background: url()!important;
 }
 .cke_button__justifyleft_icon {
-    background: url(icons.png) no-repeat 0 -768px!important;
+    background: url()!important;
 }
 .cke_button__justifyright_icon {
-    background: url(icons.png) no-repeat 0 -792px!important;
+    background: url()!important;
+}
+.cke_button__justifyleft_icon:before {
+  content: "\f036";
+}
+.cke_button__justifycenter_icon:before {
+  content: "\f037";
+}
+.cke_button__justifyright_icon:before {
+  content: "\f038";
+}
+.cke_button__justifyblock_icon:before {
+  content: "\f039";
+  font-weight: 500;
 }
 .cke_button__language_icon {
     background: url(icons.png) no-repeat 0 -816px!important;
 }
 .cke_button__link_icon {
-    background: url(icons.png) no-repeat 0 -840px!important;
+    background: url()!important;
+}
+.cke_button__link_icon:before {
+  content: "\f0c1";
 }
 .cke_button__mathjax_icon {
     background: url(icons.png) no-repeat 0 -864px!important;
@@ -906,7 +965,10 @@ legend.cke_voice_label {
     background: url(icons.png) no-repeat 0 -1632px!important;
 }
 .cke_ltr .cke_button__source_icon {
-    background: url(icons.png) no-repeat 0 -1656px!important;
+    background: url()!important;
+}
+.cke_ltr .cke_button__source_icon:before {
+  content: "\f0ec";
 }
 .cke_rtl .cke_button__sourcedialog_icon, .cke_mixed_dir_content .cke_rtl .cke_button__sourcedialog_icon {
     background: url(icons.png) no-repeat 0 -1680px!important;

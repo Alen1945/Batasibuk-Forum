@@ -173,7 +173,13 @@ CKEDITOR.dialog.add( 'emojiDialog', function( editor ) {
 		minWidth: 550,
 		minHeight: 200,
 		contents: [
-			{
+		 	{
+				id: 'tab-reaction',
+				label: editor.config.emoji.tabs.reaction,
+				elements: [
+					emojis('reaction')
+				]
+			}, {
 				id: 'tab-onion',
 				label: editor.config.emoji.tabs.onion,
 				elements: [
@@ -191,13 +197,7 @@ CKEDITOR.dialog.add( 'emojiDialog', function( editor ) {
 				elements: [
 					emojis('milkbottle')
 				]
-			}, {
-				id: 'tab-facebook',
-				label: editor.config.emoji.tabs.facebook,
-				elements: [
-					emojis('facebook')
-				]
-			}
+			},
 		],
 		onShow: function() {
 

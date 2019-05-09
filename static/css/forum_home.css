@@ -6,6 +6,8 @@
   border: 1px solid #f1f2f2;
   margin-bottom: 20px;
   background-color: #fff;
+  margin-bottom: 20px;
+   min-height: 500px;
 }
 
 
@@ -13,22 +15,85 @@
 	width: 100%;
   padding:10px 10px 8px;
  background-color: #fff;
- margin-bottom: 5px;
+ margin-bottom: 20px!important;
 }
 
-.chanels-card .chanel-detail .profile-photo{
+.chanels-card .chanel-detail .chanel-logo{
 	float: left;
 	margin-right: 20px;
+	height: 58px;
+    width: 58px;
+    border-radius: 50%;
 }
 .chanels-card .chanel-detail .remove-link-format{
-	color: #fba414;
+	color: #ff6600;
 	font-weight: bold;
 }
 .chanels-card .chanel-detail .remove-link-format:hover{
 	color: #ff4a00;
 }
-.chanels-card .chanel-detail .channel-forum> h6{
-	color: #fba414;
+.chanels-card .chanel-detail .chanel-forum> h6{
+	color: #ff6600;
 	font-weight: bold;
 	text-align: center;
+}
+
+.chanels-card .chanel-detail .forum-detail .forum-info{
+	position: relative;
+}
+.chanels-card .chanel-detail .forum-detail .forum-posts{
+	position: absolute;
+	background-color: rgba(0,0,0,.6);
+	width:50%;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	text-align: center;
+	font-size: 1em;
+}
+.chanels-card .chanel-detail .forum-detail .forum-posts>p{
+	color: #fff;
+	font-size: 1.1em;
+	margin-bottom: 5px;
+	vertical-align: middle;
+}
+.chanels-card .chanel-detail .forum-detail > a >p{
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	color:  #078fff;
+	margin:10px 0;
+}
+.chanels-card .chanel-forum .link-all-forum{
+	border-radius: 50%;
+	overflow: hidden;
+	display: block;
+	width: 100px;
+	height: 100px;
+	padding: 0!important;
+	text-align: center;
+	line-height: 100px;
+	border:1px solid #eee;
+	transition: .2s;
+
+}
+.chanels-card .chanel-forum .link-all-forum:hover,
+.chanels-card .chanel-forum .link-all-forum:active,
+.chanels-card .chanel-forum .link-all-forum:focus{
+	box-shadow: -.1em .1em .3em rgba(0,0,0,.3)
+}
+.chanels-card .chanel-forum .link-all-forum p{
+	text-align: center;
+	margin-top: 10px;
+	font-weight: bold;
+	display: inline-block;
+	position: relative;
+
+}
+.chanels-card .chanel-forum .link-all-forum p .fa{
+	font-size: 30px;
+	font-weight: normal;
+	position: absolute;
+	top: 10px;
+	left: 30px;
 }

@@ -1,9 +1,9 @@
 <div class="create-post shadow ">
             	
 	<p class="d-flex"> 
-		<img src="/media/profil_image/default_profile_normal.png" class="profile-photo">
+		<img src="{{user.profile.user_photo.url}}" class="profile-photo">
 		<span>Bagikan atau Tanya Sesuatu ke Batasibuk <a href="{% url 'forum:newthread' %}" class="btn btn-create-thread">Buat Thread</a></span>
 	
 	</p>
-	<a href="{% url "forum:home" %}" class="btn btn-forum ml-auto">Cek Batasibuk Forum</a>
+	<a href="{% url "forum:home" %}" class="btn btn-forum ml-auto">See Batasibuk Forum</a>
 </div>
