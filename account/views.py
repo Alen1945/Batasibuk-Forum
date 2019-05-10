@@ -13,12 +13,13 @@ from batasibuk_forum.models import Post
 
 
 # edit image
-from PIL import Image
+from PIL import Image,ImageSequence
 
 
 
-def resize_image(image,x,y,w,h,jenis='p'):
-	resize_to=(200,200)
+def resize_image(path,x,y,w,h,jenis='p'):
+	image=Image.open(path)
+	resize_to=(120,120)
 	if jenis=='h':
 		resize_to=(500,175)
 	width,height=image.size
@@ -28,11 +29,19 @@ def resize_image(image,x,y,w,h,jenis='p'):
 		to_right=width
 	if to_bottom>height:
 		to_bottom=height
-	
+
+	n_frames=getattr(image,'n_frames',1)
+	print(n_frames)
+	if n_frames>1:
+		frames=[]
+		for frame in ImageSequence.Iterator(image):
+			resized_frame=(frame.crop((x, y,to_right, to_bottom))).resize(resize_to,Image.ANTIALIAS)
+			frames.append(resized_frame)
+		return frames[0].save(path,optimize=True,save_all=True,append_images=frames[1:],loop=1000)
+
 	cropped_image=image.crop((x, y,to_right, to_bottom))
 	resized_image=cropped_image.resize(resize_to,Image.ANTIALIAS)
-
-	return resized_image
+	return resized_image.save(path)
 	
 
 class AccountCreate(CreateView):
@@ -72,9 +81,8 @@ class AccountCreate(CreateView):
 		new_profile.save()
 
 		if(type(x_p)!=type(None) and type(y_p)!=type(None) and type(w_p)!=type(None) and type(h_p)!=type(None)):
-				image_p=Image.open(user.profile.user_photo.path)
-				resized_image_p=resize_image(image_p,x_p,y_p,w_p,h_p)
-				resized_image_p.save(user.profile.user_photo.path)
+			resize_image(user.profile.user_photo.path,image_p,x_p,y_p,w_p,h_p)
+			
 				
 	def form_valid(self,form):
 		self.create_profile(form)
@@ -120,14 +128,10 @@ class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):
 		profile.save()
 
 		if(type(x_p)!=type(None) and type(y_p)!=type(None) and type(w_p)!=type(None) and type(h_p)!=type(None)):
-			image_p=Image.open(profile.user_photo.path)
-			resized_image_p=resize_image(image_p,x_p,y_p,w_p,h_p)
-			resized_image_p.save(profile.user_photo.path)
+			resize_image(profile.user_photo.path,x_p,y_p,w_p,h_p)
 
 		if(type(x_h)!=type(None) and type(y_h)!=type(None) and type(w_h)!=type(None) and type(h_h)!=type(None)):
-			image_h=Image.open(profile.user_header.path)
-			resized_image_h=resize_image(image_h,x_h,y_h,w_h,h_h,'h')
-			resized_image_h.save(profile.user_header.path)
+			resize_image(profile.user_header.path,x_h,y_h,w_h,h_h,'h')
 
 	def form_valid(self,form):
 		self.update_profil(form)
