@@ -174,9 +174,9 @@
         
             <!-- Posts-->
         <div class="content-posts">
-            {% with user_thread as threads  %}
-                        {% include "snippets/container_card_threads.html" %}
-                    {% endwith %}
+              {% with user_thread as threads  %}
+                  {% include "snippets/container_card_threads.html" %}
+              {% endwith %}
               <!--if all threads has paginated-->
                 {% include "snippets/this_paginated.html" %}
               <!--end if all threads has paginated-->

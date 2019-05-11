@@ -37,7 +37,7 @@ def resize_image(path,x,y,w,h,jenis='p'):
 		for frame in ImageSequence.Iterator(image):
 			resized_frame=(frame.crop((x, y,to_right, to_bottom))).resize(resize_to,Image.ANTIALIAS)
 			frames.append(resized_frame)
-		return frames[0].save(path,optimize=True,save_all=True,append_images=frames[1:],loop=1000)
+		return frames[0].save(path,optimize=True,save_all=True,append_images=frames[1:],loop=9999)
 
 	cropped_image=image.crop((x, y,to_right, to_bottom))
 	resized_image=cropped_image.resize(resize_to,Image.ANTIALIAS)
@@ -106,7 +106,7 @@ class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):
 		return context
 	def get_queryset(self):
 		query=super().get_queryset()
-		return query.filter(author=self.request.user)
+		return query.filter(author=self.request.user).order_by('-created')
 
 	def post(self,request,*arg,**kwargs):
 		form=AccountProfileUpdate(data=request.POST,files=request.FILES,instance=request.user.profile)
