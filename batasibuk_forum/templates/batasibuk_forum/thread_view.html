@@ -35,7 +35,7 @@
             			<p class="text-center">Published {{thread.created}}</p>
                 	</div>
             		<div class="hr-custom"></div>
-					<p>{{thread.body|safe}}</p>
+					{{thread.body|safe}}
 					<div class="reaction mb-3">
 						<a href="javascript:void(0)" class="btn btn-recommend r-this remove-link-format {{thread|is_user_vote_r:request}}" data-id="{{thread.id}}">{% include "snippets/recommend.svg" %} <span id="s-vote-r">{{thread.post_recommends.all.count}}</span></a>
 
@@ -54,9 +54,9 @@
 					<h5>Tambahkan komentar</h5>
 					<form method="post">
 						{% csrf_token %}
-						<p>{{forms_comment.body}}</p>
+						{{forms_comment.body}}
 						<div class="text-right">
-							<button type="submit" class="d-inline-block btn btn-orange mr-3">Komentar</button> 
+							<button type="submit" class="d-inline-block btn btn-orange mr-3 mt-2">Komentar</button> 
 						</div>
 					</form>
 					<div id="wrap-comments" class="mt-4 mb-5">

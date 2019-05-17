@@ -15,7 +15,7 @@ html, body {
 	box-sizing: border-box;
 }
 body{
-	font-family: Helvetica, Arial,sans-serif;
+	font-family: Helvetica, Arial;
   line-height: 20px;
 	color: #14171a;
 	background-color: #eee;
@@ -23,16 +23,19 @@ body{
 	padding-top: 60px;
 }
 
+
 .img-logo{
 	margin: 10px 0;
-	width: 120px;
+	width: 120px!important;
 	padding: 0;
 }
 .img-logo img{
-	width: 120px;
+	width: 100px!important;
 	height: auto;
 }
-
+.shadow{
+	box-shadow: 0 .5rem .5rem 0 rgba(0,0,0,.18)!important;
+}
 .btn{
 	font-family: Helvetica,Arial,sans-serif!important;
 	font-weight: 700;
@@ -151,7 +154,7 @@ body{
 	color: #fc8207;
 }
 .menu .navbar-brand img{
-	height: 25px;
+	height: 25px!important;
 }
 .menu form{
   margin: 0 0;
@@ -413,6 +416,13 @@ img.profile-photo {
 	font-weight: bold;
 	margin:2px 0 -5px;
 	text-transform: capitalize;
+}
+.post-container .post-detail .post-text a img{
+	max-width: 98%!important;
+	height: auto!important;
+}
+.post-container .post-detail .post-text a p{
+	overflow: hidden;
 }
 .post-container .post-detail .post-text:hover > a:before{
 	content:'Open Thread';

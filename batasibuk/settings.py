@@ -31,8 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'chat.apps.ChatConfig',
     'batasibuk_forum.apps.BatasibukForumConfig',
     'account.apps.AccountConfig',
+    'channels',
     'ckeditor',
     'ckeditor_uploader',
     'django.contrib.admin',
@@ -72,7 +74,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'batasibuk.wsgi.application'
+ASGI_APPLICATION = 'batasibuk.routing.application'
 
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels_redis.core.RedisChannelLayer',
+        'CONFIG':{
+            'hosts':[('127.0.0.1',6379)]
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

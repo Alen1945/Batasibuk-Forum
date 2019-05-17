@@ -7,10 +7,12 @@ from account.forms import AccountLoginForm
 from account import views as account_views
 from batasibuk_forum.views import ChannelView,ThreadView
 from batasibuk_forum import views as forum_views
+from chat.views import ChatRoomView
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
+	path('chat/',ChatRoomView.as_view(),name='chat'),
 	path('search/',home_views.SearchView.as_view(),name='search'),
 	path('',home_views.Index.as_view(),name='home'),
 	path('thread/<slug:slug_thread>/<str:name_thread>/',ThreadView.as_view(),name='thread'),

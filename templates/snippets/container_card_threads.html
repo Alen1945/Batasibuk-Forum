@@ -1,5 +1,15 @@
 {% for thread in threads %}
 	<div class="post-container">
+        {% if user.is_authenticate and request.user == thread.author %}
+        <div class="container">
+          <div class="row">
+            <div class="post-edit ml-auto">
+              <a href="" class="d-block-inline mr-1">Edit</a>
+              <a href="" class="d-block-inline mr-3">Hapus</a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
         <div class="post-detail shadow">
          	<img src="{{thread.author.profile.user_photo.url}}" alt="user" class="profile-photo" />
           <div class="user-info">
@@ -9,14 +19,14 @@
           <div class="hr-custom clearfix"></div>
           <div class="post-text pl-md-2 pl-lg-4">
           	<a href="{% url "thread" thread.post_slug thread.post_title %}" class="remove-link-format">
-          		<p class="thread-title">{{thread.post_title}}</p>
-                <p class="d-block">{{thread.body|truncatewords_html:33|safe}}</p>
-                <div class="reaction">
-                     <span class="text-green d-block-inline"><i class="fa fa-eye"></i> 2</span>
-                    <span class="text-success d-block-inline"><i class="fa fa-thumbs-up"></i> 2</span>
-                    <span class="text-danger d-block-inline"><i class="fa fa-thumbs-down"></i> 0</span>
-                    <span class="text-primary d-block-inline"><i class="fa fa-comment"></i> 0</span>
-              	 </div>
+          		<p class="thread-title mb-2">{{thread.post_title}}</p>
+              {{thread.body|truncatewords_html:33|safe}}
+              <div class="reaction">
+                   <span class="text-green d-block-inline"><i class="fa fa-eye"></i> 2</span>
+                  <span class="text-success d-block-inline"><i class="fa fa-thumbs-up"></i> 2</span>
+                  <span class="text-danger d-block-inline"><i class="fa fa-thumbs-down"></i> 0</span>
+                  <span class="text-primary d-block-inline"><i class="fa fa-comment"></i> 0</span>
+            	 </div>
         	</a>
           </div>
         </div>

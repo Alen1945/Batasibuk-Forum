@@ -1,4 +1,7 @@
-
+img{
+	max-width: 100%!important;
+	height: auto!important;
+}
 .wrap-content{
 	width: 100%;
 	padding: 10px 25px;
@@ -39,6 +42,7 @@
 	color: #000;
 	font-family: 'Agency',sans-serif;
 }
+
 .wrap-content .thread-detail >p{
 	color: #222;
 	font-size: 14px;
@@ -46,7 +50,7 @@
 }
 
 .wrap-content .thread-content>p{
-	font-size: 15.5px;
+	font-size: 15px;
 	color:#000;
 	margin-bottom: 8px;
 	letter-spacing: .2px;

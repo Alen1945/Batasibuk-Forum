@@ -24,7 +24,7 @@ class Index(ListView):
 	def get_queryset(self):
 		query=super().get_queryset()
 		user=self.request.user
-		if self.request.user.is_authenticated:
+		if user.is_authenticated:
 			return query.filter(Q(author=user) | Q(post_forum__followers__follower=user) | Q(post_subforum__followers__follower=user) | Q(author__profile__followers__follower=user)).distinct().order_by('-created')
 		else:
 			return query.order_by('-created')

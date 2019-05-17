@@ -1,4 +1,4 @@
-
+import math
 from django.shortcuts import render, get_object_or_404,redirect
 from django.urls import reverse_lazy,reverse
 from django.http import JsonResponse,HttpResponseNotFound,HttpResponse
@@ -37,7 +37,7 @@ def resize_image(path,x,y,w,h,jenis='p'):
 		for frame in ImageSequence.Iterator(image):
 			resized_frame=(frame.crop((x, y,to_right, to_bottom))).resize(resize_to,Image.ANTIALIAS)
 			frames.append(resized_frame)
-		return frames[0].save(path,optimize=True,save_all=True,append_images=frames[1:],loop=9999)
+		return frames[0].save(path,optimize=True,save_all=True,append_images=frames[1:])
 
 	cropped_image=image.crop((x, y,to_right, to_bottom))
 	resized_image=cropped_image.resize(resize_to,Image.ANTIALIAS)
