@@ -35,14 +35,14 @@
                 <!-- chat -->
 		        <div class="content-chat">
 		           <!-- Contact List-->
-                  <ul id="room" class="room-wraper fade show">
+                  <ul id="room" class="room-wraper">
                     <div id="roomList" class="row justify-content-around m-0">
                       <!--all room chat-->
                     </div>
                     
                   </ul><!--Contact List End-->
                   <!--messages -->
-                  <div class="room-messages fade" id="wrap-messages" style="display:none">
+                  <div class="room-messages" id="wrap-messages" style="display:none">
                     <!--infoprofile -->
                     <div class="card-header msg_head">
                       <div class="d-flex">
@@ -69,7 +69,9 @@
                      <!--infoprofile end -->
                     <!--body chat -->
                   	<div class="chat-body">
+                        <button id="btn-old-msg" class="btn btn-outline-orange" style="display:none">Chat Sebelum</button>
                         <ul class="chat-message">
+
                           <!--all chat-->
                         </ul>
                         <!--form chat -->
@@ -133,8 +135,6 @@
         for (let i=0;i<data['data_room'].length;i++){
           createRoom(data['data_room'][i])
         }
-      }else{
-        console.log(e)
       }
     }
 
@@ -210,17 +210,17 @@
     }
 
 
-    function showChat(msg,user){
+    function showChat(msg,user,pre=false){
       author=msg['author']
       author_img=msg['author_image'],
       text=msg['content']
       time=msg['time']
 
-      li_chat=document.createElement('li')
-      img_chat=document.createElement('img')
+      let li_chat=document.createElement('li')
+      let img_chat=document.createElement('img')
       img_chat.src=author_img
 
-      div1_chat=document.createElement('div')
+      let div1_chat=document.createElement('div')
       
 
       if(author==user){
@@ -235,17 +235,17 @@
 
      
 
-      div2_chat=document.createElement('div')
+      let div2_chat=document.createElement('div')
       div2_chat.className='chat-item-header'
 
-      h5_chat=document.createElement('h5')
+      let h5_chat=document.createElement('h5')
       h5_chat.textContent=author
 
-      small_chat=document.createElement('small')
+      let small_chat=document.createElement('small')
       small_chat.className='text-muted'
       small_chat.textContent='2 days ago'
 
-      p_chat=document.createElement('p')
+      let p_chat=document.createElement('p')
       p_chat.textContent=text
 
       div2_chat.appendChild(h5_chat)
@@ -254,17 +254,46 @@
       div1_chat.appendChild(div2_chat)
       div1_chat.appendChild(p_chat)
 
-      div_clearfix=document.createElement('div')
+      let div_clearfix=document.createElement('div')
       div_clearfix.className='clearfix'
       li_chat.appendChild(img_chat)
       li_chat.appendChild(div1_chat)
       li_chat.appendChild(div_clearfix)
-
       msg_list=$('.chat-message')[0]
-      msg_list.appendChild(li_chat)
-      msg_list.scrollTop=msg_list.scrollHeight
+      if(pre){
+        msg_list.prepend(li_chat)
+        msg_list.scrollTop=0
+      }else{
+       msg_list.appendChild(li_chat)
+       msg_list.scrollTop=msg_list.scrollHeight
+      }
+      
       
     }
+    function clear_form_msg(){
+      let msg=$('#chat-message')
+          msg.val('')
+          msg.next().text('') 
+    }
+
+    let chat_wrap=$('.chat-message')[0]
+    chat_wrap.onscroll=function(e){
+      if($(this).scrollTop()==0){
+        $('#btn-old-msg').fadeIn(300)
+      }else{
+        $('#btn-old-msg').fadeOut(300)
+      }
+    };
+    
+    $(document).on('click','#btn-old-msg',function(){
+      let num_show_chat=$('.chat-message').children().length
+      chatSocket.send(JSON.stringify({
+        'command':'fetch_messages',
+        'kind':'old',
+        'num_show':num_show_chat,
+      }))
+    })
+
     $(document).ready(function(){
       $('#action_menu_btn').click(function(){
         $('.action_menu').toggle();
@@ -272,61 +301,77 @@
       });
 
     $(document).on('click','#show-room-list',function(){
-      $('#wrap-messages').hide().toggleClass('show')
-      $('#room').show().toggleClass('show')
-      chatSocket.send(JSON.stringify({
-        'command':'close'
-      }))
+      chatSocket.close()
+      $('#wrap-messages').fadeOut(100)
+      $('#room').fadeIn(100)
       //update room dan berikan nilai null pada chatSocket
+      fetchMessage()
       fetchRoom()
-      chatSocket=null
+
     });
     $(document).on('click','.list-room',function(e){      
-      data_id=$(this).attr('data-id')
-      room_image=this.firstChild.firstChild.firstChild['src']
-      room_name=this.firstChild.firstChild.lastChild.firstChild.textContent
-      $('#chat-message').val('')
-      $('.emoji-wysiwyg-editor').text('')
-      $('#room_photo').attr('src',room_image)
-      $('#room_name').text(room_name)
-      $('#room').hide().toggleClass('show')
-      $('#wrap-messages').show().toggleClass('show')
-      chatSocket=new WebSocket(node+data_id+'/');
+        data_id=$(this).attr('data-id')
+        chatSocket=new ReconnectingWebSocket(node+data_id+'/');
 
-      chatSocket.onopen=function(e){
-        fetchMessage()
-      }
-      chatSocket.onmessage=function(e){
-        data=JSON.parse(e.data)
-        if(data['command']=='fetch_message'){
-          messages=data['messages']
-          $('.chat-message').html('')
-          for(i=0;i<messages.length;i++){
-            user=data['request_user']
-            showChat(messages[i],user)
-          }
-        }else if(data['command']=='new_message'){
-          user='{{request.user.username}}'
-          message=data['msg']
-          showChat(message,user)
+        room_image=this.firstChild.firstChild.firstChild['src']
+        room_name=this.firstChild.firstChild.lastChild.firstChild.textContent
+        $('#chat-message').val('')
+        $('.emoji-wysiwyg-editor').text('')
+        $('#room_photo').attr('src',room_image)
+        $('#room_name').text(room_name)
+        $('#room').fadeOut(100)
+        $('#wrap-messages').fadeIn(100)
+        $('#btn-old-msg').removeClass('dont-display')
+
+        chatSocket.onopen=function(e){
+          fetchMessage()
+
         }
-        
-      }
-      chatSocket.onclose=function(e){
-        console.log('chat close')
-      }
+        chatSocket.onmessage=function(e){
+          data=JSON.parse(e.data)
+          if (data['close']){
+            console.log('waduh close')
+            chatSocket.close()
+          }
+          let pre=false
+          if(data['command']=='fetch_message'){
+            messages=data['messages']
+            if(data['pre']){
+              pre=true
+              }else{
+                $('.chat-message').html('')
+              }
 
+            if(data['all_msg']){
+                $('#btn-old-msg').addClass('dont-display')
+              }
+            for(i=0;i<messages.length;i++){
+              user=data['request_user']
+              showChat(messages[i],user,pre)
+            }
+          }else if(data['command']=='new_message'){
+            user='{{request.user.username}}'
+            message=data['msg']
+            clear_form_msg()
+            showChat(message,user,pre)
+            console.log('dijalankan')
+          }
+          
+        }
+        chatSocket.onclose=function(e){
+          console.log('chat close')
+        }
     });
     $(document).on('click','#btn-send-msg',function(e){
       e.preventDefault()
       let msg=$('#chat-message')
-      if(msg.val().trim()){
+      if(msg.val().trim() && chatSocket.readyState==ReconnectingWebSocket.OPEN){
        chatSocket.send(JSON.stringify({
         'command':'new_message',
         'msg':msg.val().trim()
         }))
-        msg.val('')
-        msg.next().text('') 
+
+        clear_form_msg()
       }
     });
 

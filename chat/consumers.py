@@ -29,7 +29,7 @@ def room_to_json(data,user):
 		'count_received':count_received
 	}
 def get_mini_msg(text):
-	max_len=7
+	max_len=8
 	if len(text)>max_len:
 		return f'{text[:max_len]}...'
 	return text
@@ -80,15 +80,29 @@ class RoomConsumer(AsyncWebsocketConsumer):
 			)
 
 class ChatConsumer(AsyncWebsocketConsumer):
-	
-
 	async def fetch_messages(self,data):
-		messages=Message.objects.filter(room=self.room).order_by('-timestamp')[:15]
+		messages=Message.objects.filter(room=self.room).order_by('-timestamp')[:10]
+		count_msg=Message.objects.filter(room=self.room).count()
+		all_msg=False
+		if 10>=count_msg:
+				all_msg=True
+		if data.get('kind',False):
+			get_from=data.get('num_show',0)
+			get_to=get_from+10
+			if get_to-1>=count_msg:
+				all_msg=True
+			messages=Message.objects.filter(room=self.room).order_by('-timestamp')[get_from:get_to]
 		content={
 			'command':'fetch_message',
 			'request_user':self.scope['user'].username,
 			'messages':self.messages_to_json(messages),
 		}
+		if data.get('kind',False):
+			content['pre']=True
+			content['messages'].reverse()
+		if all_msg:
+			content['all_msg']=True
+
 		await self.send(text_data=json.dumps(content))
 
 	def messages_to_json(self,messages):
@@ -116,6 +130,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'command':data['command'],
 			'msg':self.message_to_json(message),
 		}
+
 		await self.channel_layer.group_send(
 			self.room_name,
 			{
@@ -125,6 +140,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			)
 		await self.send_notify_room()
 		
+
 	async def send_notify_room(self):
 		author=self.scope['user']
 		send_to=self.room.room_members.exclude(member=author).first().member
@@ -136,26 +152,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			room_list_name,{
 				'type':'fetch_room',
 				'data':"",
-				}
+				},
 			)
 
 	async def send_message(self,event):
 		content=event['content']
 		await self.send(text_data=json.dumps(content))
-	async def close_room(self,data):
-		await self.close()
+
 	commands={
-		'close': close_room,
 		'fetch_messages':fetch_messages,
 		'new_message':new_message
 	}
 	async def connect(self):
 		user=self.scope['user']
 		self.room_id=self.scope['url_route']['kwargs']['pk']
-		self.room=Room.objects.filter(pk=self.room_id).first()
-		if not self.room.room_members.filter(member=user).exists():
-			return self.close()
+		if not Room.objects.filter(pk=self.room_id).exists() or not Room.objects.filter(pk=self.room_id).first().room_members.filter(member=user).exists():
+			await self.accept()
+			await self.send(text_data=json.dumps({'close':'true'}))
 
+		self.room=Room.objects.filter(pk=self.room_id).first()
 		self.room_name=f'room_{self.room_id}'
 		await self.channel_layer.group_add(
 			self.room_name,

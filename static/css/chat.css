@@ -65,7 +65,7 @@
 
 .msg_head{
 	position: relative;
-	margin-bottom: 20px;
+	margin-bottom: 5px;
 	border-radius: 5px!important;
 	color: #fff;
 	background: linear-gradient(90deg,#fc8207 0%,#f05c27 50%,#e7413f 100%);
@@ -141,10 +141,12 @@
 
 .room-messages .chat-body{
 	padding-top: 10px;
+	position: relative;
 }
 .room-messages .chat-body ul.chat-message{
   	padding: 0;
   	margin: 0;
+  	padding-top: 50px;
   	overflow-y: scroll;
   	min-height: 200px;
 	max-height: 500px;
@@ -250,4 +252,17 @@
 	left: unset;
 	bottom: 10px;
 	right: 40px;
+}
+
+#btn-old-msg{
+	position: absolute;
+	top: 5px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+
+
+.dont-display{
+	display: none!important;
 }
