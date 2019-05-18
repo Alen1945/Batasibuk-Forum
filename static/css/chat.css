@@ -40,8 +40,8 @@
 }
 .room-wraper .list-room a .contact .msg-preview small{
   position: absolute;
-  top: 0;
-  right: -20px;
+  top: 15px;
+  right: -35px;
 }
 
 .room-wraper .list-room a .contact .msg-preview .chat-alert{
@@ -182,7 +182,7 @@
   width: 0;
 }
 .room-messages .chat-body ul.chat-message li .chat-item{
-	min-width: 150px;
+	min-width: 200px;
 	max-width: 350px;
 }
 .room-messages .chat-body ul.chat-message li.left .chat-item .chat-item-header{
@@ -223,13 +223,13 @@
 
 .room-messages .chat-body ul.chat-message li.left .chat-item .chat-item-header small{
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: 18px;
+  right: 10px;
 }
 .room-messages .chat-body ul.chat-message li.right .chat-item .chat-item-header small{
   position: absolute;
-  top: 15px;
-  left: 20px;
+  top: 18px;
+  left: 10px;
 }
 
 .form-chat .input-container{
@@ -259,7 +259,8 @@
 	top: 5px;
 	left: 0;
 	right: 0;
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 

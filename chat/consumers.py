@@ -1,4 +1,11 @@
 import json
+import datetime
+import calendar
+
+from django.utils.html import avoid_wrapping
+from django.utils.timezone import is_aware, utc
+from django.utils.translation import gettext, ngettext_lazy
+
 from django.http import JsonResponse
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Room,Message
@@ -25,7 +32,7 @@ def room_to_json(data,user):
 		'room_id':data.id,
 		'image_url':another_member.member.profile.user_photo.url,
 		'last_msg':get_mini_msg(messages.last().text),
-		'last_msg_time':str(data.room_messages.all().last().timestamp),
+		'last_msg_time':data.room_messages.all().last().timestamp,
 		'count_received':count_received
 	}
 def get_mini_msg(text):
@@ -33,6 +40,55 @@ def get_mini_msg(text):
 	if len(text)>max_len:
 		return f'{text[:max_len]}...'
 	return text
+
+def custom_time_since(d):
+	time_strings = {
+	'year': ngettext_lazy('%d year', '%d years'),
+	'month': ngettext_lazy('%d month', '%d months'),
+	'week': ngettext_lazy('%d week', '%d weeks'),
+	'day': ngettext_lazy('%d day', '%d days'),
+	'hour': ngettext_lazy('%d hour', '%d hours'),
+	'minute': ngettext_lazy('%d minute', '%d minutes'),
+	}
+
+	TIMESINCE_CHUNKS = (
+	    (60 * 60 * 24 * 365, 'year'),
+	    (60 * 60 * 24 * 30, 'month'),
+	    (60 * 60 * 24 * 7, 'week'),
+	    (60 * 60 * 24, 'day'),
+	    (60 * 60, 'hour'),
+	    (60, 'minute'),
+	)
+
+
+	if not isinstance(d, datetime.datetime):
+	    d = datetime.datetime(d.year, d.month, d.day)
+
+	now =datetime.datetime.now(utc if is_aware(d) else None)
+
+	delta = now - d
+
+
+	leapdays = calendar.leapdays(d.year, now.year)
+	if leapdays != 0:
+	    if calendar.isleap(d.year):
+	        leapdays -= 1
+	    elif calendar.isleap(now.year):
+	        leapdays += 1
+	delta -= datetime.timedelta(leapdays)
+
+	since = delta.days * 24 * 60 * 60 + delta.seconds
+	if since <= 59:
+	    result=f'{since} detik'
+	    return result +' yang lalu'
+	for i, (seconds, name) in enumerate(TIMESINCE_CHUNKS):
+	    count = since // seconds
+	    if count != 0:
+	        break
+	if i<=2:
+		return d.strftime('%d %B,%Y')
+	result = time_strings[name] % count
+	return result +' yang lalu'
 
 class RoomConsumer(AsyncWebsocketConsumer):
 	async def fetch_room(self,data):
@@ -42,7 +98,10 @@ class RoomConsumer(AsyncWebsocketConsumer):
 			'command':'fetch_room',
 			'data_room':rooms_to_json(room,user)
 		}
+		for r in content['data_room']:
+			r['last_msg_time']=custom_time_since(r['last_msg_time'])
 		await self.send(text_data=json.dumps(content))
+
 	commands={
 		'fetch_room':fetch_room
 	}
@@ -97,6 +156,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'request_user':self.scope['user'].username,
 			'messages':self.messages_to_json(messages),
 		}
+		for r in content['messages']:
+			r['time']=custom_time_since(r['time'])
 		if data.get('kind',False):
 			content['pre']=True
 			content['messages'].reverse()
@@ -120,7 +181,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'author':message.author.username,
 			'author_image':message.author.profile.user_photo.url,
 			'content':message.text,
-			'time':str(message.timestamp),
+			'time':message.timestamp,
 		}
 	async def new_message(self,data):
 		msg=data['msg']
@@ -130,7 +191,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 			'command':data['command'],
 			'msg':self.message_to_json(message),
 		}
-
+		content['msg']['time']=custom_time_since(content['msg']['time'])
 		await self.channel_layer.group_send(
 			self.room_name,
 			{

@@ -172,7 +172,7 @@
       p_msg.textContent=last_msg
       small_time=document.createElement('small')
       small_time.className='text-muted'
-      small_time.textContent='a min ago'
+      small_time.textContent=last_msg_time
       
 
       div_msg.appendChild(h6_name)
@@ -243,7 +243,7 @@
 
       let small_chat=document.createElement('small')
       small_chat.className='text-muted'
-      small_chat.textContent='2 days ago'
+      small_chat.textContent=time
 
       let p_chat=document.createElement('p')
       p_chat.textContent=text
@@ -329,6 +329,7 @@
         }
         chatSocket.onmessage=function(e){
           data=JSON.parse(e.data)
+          console.log(data)
           if (data['close']){
             console.log('waduh close')
             chatSocket.close()
@@ -354,7 +355,6 @@
             message=data['msg']
             clear_form_msg()
             showChat(message,user,pre)
-            console.log('dijalankan')
           }
           
         }
