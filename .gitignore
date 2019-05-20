@@ -3,3 +3,6 @@
 *.db
 *.sqlite3
 *.sqlite
+/media/logo_image/
+/media/profil_image/
+/media/profile_image/
