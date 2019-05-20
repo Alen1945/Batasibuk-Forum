@@ -21,7 +21,7 @@ def resize_image(path,x,y,w,h,jenis='p'):
 	image=Image.open(path)
 	resize_to=(120,120)
 	if jenis=='h':
-		resize_to=(500,175)
+		resize_to=(600,210)
 	width,height=image.size
 	to_right=w+x
 	to_bottom=h+y
@@ -89,7 +89,28 @@ class AccountCreate(CreateView):
 		return super().form_valid(form)
 
 
+class CreatorView(ListView):
+	model=Post
+	context_object_name='user_thread'
+	template_name='account/creator.html'
+	paginate_by=5
+	
 
+	def get(self,*args,**kwargs):
+		this_user=User.objects.filter(username=self.kwargs['user_username']).first()
+		if self.request.user.is_authenticated and self.request.user==this_user:
+			return redirect(reverse('profile',kwargs={'user_username':self.kwargs['user_username']}))
+		return super().get(*args,*kwargs)
+	def get_context_data(self,*args,**kwargs):
+		context=super().get_context_data(*args,**kwargs)
+		context['title']=self.kwargs['user_username']
+		context['this_user']=User.objects.filter(username=self.kwargs['user_username']).first()
+		return context
+	def get_queryset(self):
+		query=super().get_queryset()
+		this_author=User.objects.filter(username=self.kwargs['user_username'],status=1).first()
+		return query.filter(author=this_author,status=1)
+		
 class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):
 	model=Post
 	context_object_name='user_thread'
@@ -106,7 +127,7 @@ class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):
 		return context
 	def get_queryset(self):
 		query=super().get_queryset()
-		return query.filter(author=self.request.user).order_by('-created')
+		return query.filter(author=self.request.user,status=1).order_by('-created')
 
 	def post(self,request,*arg,**kwargs):
 		form=AccountProfileUpdate(data=request.POST,files=request.FILES,instance=request.user.profile)
@@ -147,27 +168,7 @@ class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):
 		if not self.test_func():
 			return redirect(reverse('creator',kwargs={'user_username':self.kwargs['user_username']}))
 		return super().dispatch(request,*args,**kwargs)
-class CreatorView(ListView):
-	model=Post
-	context_object_name='user_thread'
-	template_name='account/creator.html'
-	paginate_by=5
-	
 
-	def get(self,*args,**kwargs):
-		this_user=User.objects.filter(username=self.kwargs['user_username']).first()
-		if self.request.user.is_authenticated and self.request.user==this_user:
-			return redirect(reverse('profile',kwargs={'user_username':self.kwargs['user_username']}))
-		return super().get(*args,*kwargs)
-	def get_context_data(self,*args,**kwargs):
-		context=super().get_context_data(*args,**kwargs)
-		context['title']=self.kwargs['user_username']
-		context['this_user']=User.objects.filter(username=self.kwargs['user_username']).first()
-		return context
-	def get_queryset(self):
-		query=super().get_queryset()
-		this_author=User.objects.filter(username=self.kwargs['user_username']).first()
-		return query.filter(author=this_author)
 
 
 

@@ -169,7 +169,11 @@
       h6_name.textContent=name
       p_msg=document.createElement('p')
       p_msg.className='text-muted'
-      p_msg.textContent=last_msg
+      if (data['my_msg']){
+        p_msg.textContent='Anda: '+last_msg
+      }else{
+        p_msg.textContent=last_msg
+      }
       small_time=document.createElement('small')
       small_time.className='text-muted'
       small_time.textContent=last_msg_time
@@ -224,6 +228,7 @@
       
 
       if(author==user){
+        author='Anda'
         li_chat.className='right'
         img_chat.className='profile-photo float-right'
         div1_chat.className='chat-item float-right'

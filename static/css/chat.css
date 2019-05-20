@@ -40,8 +40,8 @@
 }
 .room-wraper .list-room a .contact .msg-preview small{
   position: absolute;
-  top: 15px;
-  right: -35px;
+  top: 8px;
+  right: -45px;
 }
 
 .room-wraper .list-room a .contact .msg-preview .chat-alert{

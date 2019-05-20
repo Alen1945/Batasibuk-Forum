@@ -23,6 +23,7 @@ urlpatterns = [
 	path('profile/<user_username>',ProfileView.as_view(),name='profile'),
 	path('creator/<user_username>',CreatorView.as_view(),name='creator'),
 	path('logout',auth_views.LogoutView.as_view(),name='logout'),
+	path('api/posts/<post_slug>/delete',forum_views.delete_thread,name='delete'),
 	path('api/posts/<post_id>/vote_r',forum_views.vote_r,name='vote_r'),
 	path('api/posts/<post_slug>/upvote',forum_views.upvote_post,name='upvote_post'),
 	path('api/posts/<post_slug>/downvote',forum_views.downvote_post,name='downvote_post'),

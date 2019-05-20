@@ -7,7 +7,7 @@ CKEDITOR.plugins.add( 'emoji', {
         editor.config.smiley_path =  this.path + 'sticker/';
 		editor.addCommand( 'emoji', new CKEDITOR.dialogCommand( 'emojiDialog' ) );
 		editor.ui.addButton( 'Emoji', {
-			label: 'Insert emoji',
+			label: 'Insert Sticker',
 			command: 'emoji',
 			toolbar: 'insert'
 		});

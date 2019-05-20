@@ -1,11 +1,11 @@
 {% for thread in threads %}
 	<div class="post-container">
-        {% if user.is_authenticate and request.user == thread.author %}
+        {% if user.is_authenticated and user == thread.author %}
         <div class="container">
           <div class="row">
             <div class="post-edit ml-auto">
-              <a href="" class="d-block-inline mr-1">Edit</a>
-              <a href="" class="d-block-inline mr-3">Hapus</a>
+              <a href="{% url "forum:updatethread" thread.post_slug %}" class="edit-tread d-block-inline mr-1" data-action='edit'>Edit</a>
+              <a href="javascript:void(0)" class="delete-thread d-block-inline mr-3" data-id='{{thread.post_slug}}' data-action='delete'>Hapus</a>
             </div>
           </div>
         </div>
@@ -21,6 +21,7 @@
           	<a href="{% url "thread" thread.post_slug thread.post_title %}" class="remove-link-format">
           		<p class="thread-title mb-2">{{thread.post_title}}</p>
               {{thread.body|truncatewords_html:33|safe}}
+              <p class="clearfix"></p>
               <div class="reaction">
                    <span class="text-green d-block-inline"><i class="fa fa-eye"></i> 2</span>
                   <span class="text-success d-block-inline"><i class="fa fa-thumbs-up"></i> 2</span>

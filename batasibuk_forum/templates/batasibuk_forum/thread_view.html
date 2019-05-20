@@ -36,6 +36,7 @@
                 	</div>
             		<div class="hr-custom"></div>
 					{{thread.body|safe}}
+					<p class="clearfix"></p>
 					<div class="reaction mb-3">
 						<a href="javascript:void(0)" class="btn btn-recommend r-this remove-link-format {{thread|is_user_vote_r:request}}" data-id="{{thread.id}}">{% include "snippets/recommend.svg" %} <span id="s-vote-r">{{thread.post_recommends.all.count}}</span></a>
 

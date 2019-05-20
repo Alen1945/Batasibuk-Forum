@@ -3,10 +3,11 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse_lazy,reverse
 from django.http import HttpResponse,JsonResponse,HttpResponseNotFound
 from django.views.generic import View,CreateView, ListView,DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import PermissionDenied
 from .forms import NewPostForm,NewCommentForm
 from .models import (Category,
 					SubForum,
@@ -19,35 +20,6 @@ from .models import (Category,
 UPVOTE=1
 DOWNVOTE=2
 
-class NewPostView(LoginRequiredMixin,View):
-	template_name='batasibuk_forum/new_thread.html'
-	form_class=NewPostForm()
-	context={}
-	def get(self,*args,**kwargs):
-		self.context={
-			'title':'New Thread',
-			'form':self.form_class
-		}
-		return render(self.request,self.template_name,self.context)
-	def post(self,*args,**kwargs):
-		self.form_class=NewPostForm(self.request.POST)
-		if self.form_class.is_valid():
-			thread_post=self.form_class.save(commit=False)
-			thread_post.author=self.request.user
-			jenis,id_jenis=self.form_class.cleaned_data.get('select_forum').split('-')
-			if jenis=='fr':
-				f=Forum.objects.get(id=id_jenis)
-			elif jenis=='sfr':
-				f=SubForum.objects.get(id=id_jenis)
-			thread_post.content_forum_post=deepcopy(f)
-			if 'post' in self.request.POST:
-				thread_post.status=1
-			thread_post.save()
-		return redirect(reverse('thread',args=(thread_post.post_slug,thread_post.post_title)))
-
-
-
-
 class HomeForumsView(ListView):
 	model= Category
 	template_name='batasibuk_forum/home.html'
@@ -56,8 +28,6 @@ class HomeForumsView(ListView):
 		'title':'forum'
 	}
 
-
-	
 class ChannelView(ListView):
 	model=Forum
 	template_name='batasibuk_forum/channel_view.html'
@@ -93,6 +63,47 @@ class ForumView(ListView):
 			forum_type=ContentType.objects.get_for_model(SubForum)
 		return query.filter(forum_post_type=forum_type,forum_post_id=self.kwargs['id_forum'],status=1).order_by('-created')
 
+
+class NewPostView(LoginRequiredMixin,UserPassesTestMixin,View):
+	template_name='batasibuk_forum/new_thread.html'
+	form_class=NewPostForm()
+	mode=None
+	context={}
+	def test_func(self):
+		self.thread_update=Post.objects.filter(post_slug=self.kwargs['slug_thread']).first()
+		if self.mode=='update' and self.request.user==self.thread_update.author:
+			return True
+		else:
+			False
+	def get(self,*args,**kwargs):
+		if self.mode=='update':
+			data_thread=self.thread_update.__dict__
+			self.form_class=NewPostForm(initial=data_thread,instance=self.thread_update)
+		self.context={
+			'title':'New Thread',
+			'form':self.form_class
+		}
+		if kwargs.get('slug_thread',False):
+			self.context['title']=f"Update : {self.thread_update.post_title}"
+		return render(self.request,self.template_name,self.context)
+	def post(self,*args,**kwargs):
+		self.form_class=NewPostForm(self.request.POST)
+		if kwargs.get('slug_thread',False):
+			self.form_class=NewPostForm(self.request.POST,instance=self.thread_update)
+		if self.form_class.is_valid():
+			thread_post=self.form_class.save(commit=False)
+			thread_post.author=self.request.user
+			jenis,id_jenis=self.form_class.cleaned_data.get('select_forum').split('-')
+			if jenis=='fr':
+				f=Forum.objects.get(id=id_jenis)
+			elif jenis=='sfr':
+				f=SubForum.objects.get(id=id_jenis)
+			thread_post.content_forum_post=deepcopy(f)
+			if 'post' in self.request.POST:
+				thread_post.status=1
+			thread_post.save()
+		return redirect(reverse('thread',args=(thread_post.post_slug,thread_post.post_title)))
+
 def record_view(request,slug_thread):
 	post=get_object_or_404(Post,post_slug=slug_thread)
 	if request.user.is_authenticated:
@@ -122,7 +133,7 @@ class ThreadView(FormMixin,DetailView):
 		post=self.model.objects.get(post_slug=self.kwargs['slug_thread'])
 		post.views=int(record_view(self.request,self.kwargs['slug_thread']))
 		post.save()
-		return query.filter(post_slug=self.kwargs['slug_thread'])
+		return query.filter(post_slug=self.kwargs['slug_thread'],status=1)
 
 	def post(self,request,*args,**kwargs):
 		if self.request.user.is_authenticated:
@@ -139,7 +150,6 @@ class ThreadView(FormMixin,DetailView):
 		new_comment=form.save(commit=False)
 		new_comment.post=post
 		new_comment.user=user
-		print(form.cleaned_data)
 		id_parent_comment=form.cleaned_data['id_parent_comment']
 		if id_parent_comment:
 			parent=Comment.objects.filter(pk=id_parent_comment).first()
@@ -148,11 +158,24 @@ class ThreadView(FormMixin,DetailView):
 		new_comment.save()
 		return super().form_valid(form)
 
+def delete_thread(request,post_slug):
+	if request.user.is_authenticated:
+		thread=get_object_or_404(Post,post_slug=post_slug)
+		if request.user==thread.author:
+			thread.delete()
+			data={
+				'delete':1,
+				'count-posts':thread.author.posts.all().count()
+			}
+		else:
+			raise PermissionDenied()
+			data={
+				'delete':0
+			}
+	else:
+		return redirect_login(reverse('login'))
 
-
-
-
-
+	return JsonResponse(data)
 
 def upvote_post(request,post_slug):
 	if request.user.is_authenticated:
