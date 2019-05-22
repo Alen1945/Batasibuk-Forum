@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  $(document).on('click','.post-container',function(e){
+    if(e.target.dataset.action=='delete'){
+      e.preventDefault()
+      let box_confirm=confirm('Anda Yakin Ingin Mengapus Thread Ini')
+      if(box_confirm==true){
+       let node_thread=$(this)
+       let post_slug=e.target.dataset.id
+       $.ajax({
+        type:'POST',
+        url:'api/posts/'+post_slug+'/delete',
+        data:{
+          csrfmiddlewaretoken:'{{csrf_token}}'
+        },
+        data_type:'json',
+        success:function(data){
+          if(data.delete==1){
+            node_thread.fadeOut().remove()
+            $('#sum-posts').text(data['count-posts'])
+          }else{
+            alert('Permission Denied')
+          }
+        }
+       })
+      }
+
+    }else{
+      console.log('alen')
+      e.stopPropagation()
+    }
+    
+  });
+</script>

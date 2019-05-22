@@ -69,12 +69,6 @@ class NewPostView(LoginRequiredMixin,UserPassesTestMixin,View):
 	form_class=NewPostForm()
 	mode=None
 	context={}
-	def test_func(self):
-		self.thread_update=Post.objects.filter(post_slug=self.kwargs['slug_thread']).first()
-		if self.mode=='update' and self.request.user==self.thread_update.author:
-			return True
-		else:
-			False
 	def get(self,*args,**kwargs):
 		if self.mode=='update':
 			data_thread=self.thread_update.__dict__
@@ -103,17 +97,26 @@ class NewPostView(LoginRequiredMixin,UserPassesTestMixin,View):
 				thread_post.status=1
 			thread_post.save()
 		return redirect(reverse('thread',args=(thread_post.post_slug,thread_post.post_title)))
-
+	def test_func(self):
+		if self.mode=='update':
+			self.thread_update=Post.objects.filter(post_slug=self.kwargs['slug_thread']).first()
+			if self.request.user==self.thread_update.author:
+				return True
+			else:
+				return False
+		else:
+			return True
 def record_view(request,slug_thread):
 	post=get_object_or_404(Post,post_slug=slug_thread)
 	if request.user.is_authenticated:
-		if not ViewPost.objects.filter(post=post,session=request.session.session_key):
-			view=ViewPost(post=post,ip=request.META['REMOTE_ADDR'],session=request.session.session_key)
+		if not ViewPost.objects.filter(post=post,session=request.session.session_key,user=request.user).exists():
+			view=ViewPost(post=post,ip=request.META['REMOTE_ADDR'],session=request.session.session_key,user=request.user)
 			view.save()
 	return ViewPost.objects.filter(post=post).count()
 
 class ThreadView(FormMixin,DetailView):
 	model=Post
+	mode=None
 	template_name='batasibuk_forum/thread_view.html'
 	context_object_name='thread'
 	slug_url_kwarg='slug_thread'
@@ -156,6 +159,19 @@ class ThreadView(FormMixin,DetailView):
 			new_comment.comment_parent=parent
 
 		new_comment.save()
+		if self.mode=='ajax':
+			if id_parent_comment:
+				data_comment={
+					'reply':[new_comment]
+				}
+				data_comment=render(self.request,'batasibuk_forum/reply.html',data_comment)
+			else:
+				data_comment={
+					'all_comment':[new_comment]
+				}
+				data_comment=render(self.request,'batasibuk_forum/comments.html',data_comment)
+
+			return HttpResponse(data_comment)
 		return super().form_valid(form)
 
 def delete_thread(request,post_slug):
@@ -168,10 +184,10 @@ def delete_thread(request,post_slug):
 				'count-posts':thread.author.posts.all().count()
 			}
 		else:
-			raise PermissionDenied()
 			data={
 				'delete':0
 			}
+			raise PermissionDenied()
 	else:
 		return redirect_login(reverse('login'))
 
@@ -313,4 +329,6 @@ def get_replys(request,comment_id):
 		'reply':reply
 	}	
 	data=render(request,'batasibuk_forum/reply.html',data)
+
+
 	return HttpResponse(data)

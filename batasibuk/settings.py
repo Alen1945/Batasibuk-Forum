@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'notifier.apps.NotifierConfig',
     'chat.apps.ChatConfig',
     'batasibuk_forum.apps.BatasibukForumConfig',
     'account.apps.AccountConfig',

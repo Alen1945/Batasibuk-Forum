@@ -23,10 +23,10 @@
               {{thread.body|truncatewords_html:33|safe}}
               <p class="clearfix"></p>
               <div class="reaction">
-                   <span class="text-green d-block-inline"><i class="fa fa-eye"></i> 2</span>
-                  <span class="text-success d-block-inline"><i class="fa fa-thumbs-up"></i> 2</span>
-                  <span class="text-danger d-block-inline"><i class="fa fa-thumbs-down"></i> 0</span>
-                  <span class="text-primary d-block-inline"><i class="fa fa-comment"></i> 0</span>
+                   <span class="d-block-inline"><i class="fa fa-eye"></i> {{thread.post_views.all.count}}</span>
+                  <span class="d-block-inline"><i class="ba-claps"></i> {{thread.upvotes}}</span>
+                  <span class="d-block-inline"><i class="ba-punch"></i> {{thread.downvotes}}</span>
+                  <span class="d-block-inline"><i class="fa fa-comment"></i> {{thread.post_comments.all.count}}</span>
             	 </div>
         	</a>
           </div>

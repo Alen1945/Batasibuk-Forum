@@ -167,6 +167,7 @@ class Recommend(models.Model):
 
 class ViewPost(models.Model):
 	post=models.ForeignKey(Post,related_name='post_views',on_delete=models.CASCADE)
+	user=models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
 	ip=models.CharField(max_length=40)
 	session=models.CharField(max_length=40)
 	created=models.DateTimeField(default=timezone.now)

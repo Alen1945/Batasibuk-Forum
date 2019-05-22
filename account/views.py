@@ -108,7 +108,7 @@ class CreatorView(ListView):
 		return context
 	def get_queryset(self):
 		query=super().get_queryset()
-		this_author=User.objects.filter(username=self.kwargs['user_username'],status=1).first()
+		this_author=User.objects.filter(username=self.kwargs['user_username']).first()
 		return query.filter(author=this_author,status=1)
 		
 class ProfileView(LoginRequiredMixin,UserPassesTestMixin,FormMixin,ListView):

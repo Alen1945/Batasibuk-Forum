@@ -39,7 +39,19 @@
                     <div id="roomList" class="row justify-content-around m-0">
                       <!--all room chat-->
                     </div>
-                    
+                    <div class="add-room dropdown d-flex">
+                      <a href="javascript:void(0)"class="btn btn-orange btn-custom ml-auto" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
+                      <div class="dropdown-menu">
+                        <ul class="add-list-room">
+                          {% for c in contact  %}
+                            <li><a href="javascript:void(0)" title="{{c.username}}" class="list-room btn-add-room" data-id='{{c.id}}' data-new='true'><img src="{{c.profile.user_photo.url}}" alt="user" class="profile-photo" /> <span class="name-user">{{c.username}}</span></a></li>
+                          {%empty%}
+                            <p>Anda belum mengikuti creator manapun</p>
+                          {% endfor %}
+                          
+                        </ul>
+                      </div>
+                    </div>
                   </ul><!--Contact List End-->
                   <!--messages -->
                   <div class="room-messages" id="wrap-messages" style="display:none">
@@ -54,7 +66,9 @@
                           <span class="online_icon"></span>
                         </div>
                         <div class="user_info ml-4">
-                          <span id="room_name">Chat with Maryam Naz</span>
+                          <span id="room_name">
+                            <!--user chat-->
+                          </span>
                         </div>
                       </div>
                       <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
@@ -166,6 +180,7 @@
       div_msg=document.createElement('div')
       div_msg.className='msg-preview'
       h6_name=document.createElement('h6')
+      h6_name.className='name-user'
       h6_name.textContent=name
       p_msg=document.createElement('p')
       p_msg.className='text-muted'
@@ -310,16 +325,21 @@
       $('#wrap-messages').fadeOut(100)
       $('#room').fadeIn(100)
       //update room dan berikan nilai null pada chatSocket
-      fetchMessage()
+      // fetchMessage()
       fetchRoom()
+      $('.chat-message').html('')
 
     });
     $(document).on('click','.list-room',function(e){      
         data_id=$(this).attr('data-id')
-        chatSocket=new ReconnectingWebSocket(node+data_id+'/');
-
-        room_image=this.firstChild.firstChild.firstChild['src']
-        room_name=this.firstChild.firstChild.lastChild.firstChild.textContent
+        _new=$(this).attr('data-new')
+        if (_new=='true'){
+          chatSocket=new ReconnectingWebSocket(node+data_id+'/new/');
+        }else{
+          chatSocket=new ReconnectingWebSocket(node+data_id+'/ready/');
+        }
+        room_image=$(this).find('img').attr('src')
+        room_name=$(this).find('.name-user').text()
         $('#chat-message').val('')
         $('.emoji-wysiwyg-editor').text('')
         $('#room_photo').attr('src',room_image)
@@ -334,32 +354,39 @@
         }
         chatSocket.onmessage=function(e){
           data=JSON.parse(e.data)
-          console.log(data)
           if (data['close']){
-            console.log('waduh close')
+            console.log('close')
             chatSocket.close()
           }
           let pre=false
           if(data['command']=='fetch_message'){
             messages=data['messages']
-            if(data['pre']){
-              pre=true
-              }else{
-                $('.chat-message').html('')
-              }
+            if (messages){
+                if(data['pre']){
+                pre=true
+                }else{
+                  $('.chat-message').html('')
+                }
 
-            if(data['all_msg']){
-                $('#btn-old-msg').addClass('dont-display')
+              if(data['all_msg']){
+                  $('#btn-old-msg').addClass('dont-display')
+                }
+              for(i=0;i<messages.length;i++){
+                user=data['request_user']
+                showChat(messages[i],user,pre)
               }
-            for(i=0;i<messages.length;i++){
-              user=data['request_user']
-              showChat(messages[i],user,pre)
+            }else{
+              $('#btn-old-msg').addClass('dont-display')
             }
+            
           }else if(data['command']=='new_message'){
             user='{{request.user.username}}'
             message=data['msg']
             clear_form_msg()
             showChat(message,user,pre)
+          }else if(data['command']=='redirect_socket'){
+            chatSocket.url=node+data['room_id']+'/ready/'
+            $('#btn-old-msg').addClass('dont-display')
           }
           
         }

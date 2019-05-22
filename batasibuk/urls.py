@@ -16,6 +16,7 @@ urlpatterns = [
 	path('search/',home_views.SearchView.as_view(),name='search'),
 	path('',home_views.Index.as_view(),name='home'),
 	path('thread/<slug:slug_thread>/<str:name_thread>/',ThreadView.as_view(),name='thread'),
+	path('ajax/thread/<slug:slug_thread>/<str:name_thread>/',ThreadView.as_view(mode='ajax'),name='ajaxthread'),
 	path('channel/<int:id_channel>/<str:name_channel>/',ChannelView.as_view(),name='channel'),
 	path('forum/',include('batasibuk_forum.urls',namespace='forum')),
 	path('register/',AccountCreate.as_view(),name='register'),
