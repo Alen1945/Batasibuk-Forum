@@ -4,5 +4,5 @@ from . import consumers
 
 websocket_urlpatterns=[
 	path('ws/chat/',consumers.RoomConsumer),
-	path('ws/chat/<pk>/',consumers.ChatConsumer),
+	path('ws/chat/<pk>/<status>/',consumers.ChatConsumer),
 ]

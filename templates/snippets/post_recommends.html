@@ -5,7 +5,7 @@
   	<div class="trend-thread">
       <a href="{% url 'thread' thread.post_slug thread.post_title %}" class="remove-link-format">
       	<p class="threads-title">{{thread.post_title}}</p >
-      	<p class="thread-detail"><span class='text-muted'>Published {{thread.created|to_time_since}}</span><span class="thread-r">{{thread.post_recommends.all.count}} R</span></p>
+      	<p class="thread-detail"><span class='text-muted'>Published {{thread.created|to_time_since}}</span><span class="thread-r">{{thread.post_recommends.all.count}}<i class="ba-recomend"></i></span></p>
       </a>
   	</div>
   {% endfor %}

@@ -1,0 +1,47 @@
+{% load vote_follow_filter %}
+{% for c in all_comment  %}
+<div class="detail-comment mb-3">
+	<div class="post-comment parent-comment d-flex flex-row align-items-start">
+       <img src="{{c.user.profile.user_photo.url}}" class="img-fluid user-photo">
+       <p>
+		<span>{{c.user}}</span>
+		 {{c.body|safe}}
+		</p>
+    </div>
+	<div class="reaction mb-2 ml-5">
+		<a href="javascript:void(0)" class="btn btn-claps btn-claps-sm vote-this {{c|is_user_upvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='up'>
+		{% include "snippets/claps-sm.svg" %}
+		</a><span id="up-{{c.id}}">{{c.upvotes}}</span>
+		
+		<a href='javascript:void(0)' class="btn btn-punch btn-punch-sm vote-this {{c|is_user_downvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='down'>
+			{% include "snippets/punch-sm.svg" %}
+		</a>
+		<span id="down-{{c.id}}">{{c.downvotes}}</span>
+		<a href='javascript:void(0)' data-reply-show="data-reply-{{c.pk}}" data-id="{{c.pk}}" class="show-data-reply"><span class="d-inline-block">&nbsp;<i class="fa fa-comments-o fa-lg"></i> <span id="count-reply-{{c.pk}}">{{c.comment_reply.all.count}}</span> Balasan</span></a>
+		<a href='javascript:void(0)'data-form-show="form-reply-{{c.pk}}" class="show-form-reply">Balas</a>
+		
+	</div>
+	<!-- daftar reply-->
+		<div id="data-reply-{{c.pk}}" class="data-reply pl-5">
+
+		</div>
+		<!-- end daftar reply-->
+		<!-- form reply-->
+		<div id="form-reply-{{c.pk}}" class="d-none form-reply mt-2 pl-4">
+		<form method="post" class="form-comment">
+			{% csrf_token %}
+			<input name="id_parent_comment" id="id_id_parent_comment" type="hidden" value={{c.pk}}>
+			<p>
+			<textarea name="body" class="form-control" placeholder="Berikan Komentar untuk Thread ini" id="id_body-{{c.pk}}"></textarea></p>
+			<div class="text-right">
+				<button type="submit" class="d-inline-block btn btn-orange mr-3" data-action='submit-form' data-type='reply'>Balas</button>
+			</div>
+			
+		</form>
+		</div>
+		<!-- end form reply-->
+		<div class="hr-custom mt-2"></div>
+</div>
+{%empty%}
+<p id="none-comment">Tidak ada komentar</p>
+{% endfor %}

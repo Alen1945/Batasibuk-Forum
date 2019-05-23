@@ -48,68 +48,26 @@
 							{% include "snippets/punch.svg" %}
 						</a>
 						<span id="down-{{thread.post_slug}}" class='detail-reaction'>{{thread.downvotes}}</span> <span class="d-none d-sm-inline-block detail-reaction" >Flungku</span>
-						<a href="#wrap-comments" class="totals-comment" ><span class="d-inline-block"><i class="fa fa-comments-o fa-lg"></i>{{thread.post_comments.all.count}} Comment{{thread.post_comments.all.count|pluralize}} </span></a>
+						<a href="#wrap-comments" class="totals-comment" ><span class="d-inline-block"><i class="fa fa-comments-o fa-lg"></i><span id="count-comment">{{thread.post_comments.all.count}}</span> Comment{{thread.post_comments.all.count|pluralize}} </span></a>
 
 
 					</div>
 					<h5>Tambahkan komentar</h5>
-					<form method="post">
+					<form method="post" class="form-comment">
 						{% csrf_token %}
 						{{forms_comment.body}}
 						<div class="text-right">
-							<button type="submit" class="d-inline-block btn btn-orange mr-3 mt-2">Komentar</button> 
+							<button type="submit" class="d-inline-block btn btn-orange mr-3 mt-2" data-action='submit-form' data-type='comment'>Komentar</button> 
 						</div>
 					</form>
 					<div id="wrap-comments" class="mt-4 mb-5">
 					{% with thread.post_comments.all.count as total_comments  %}
-					  <h5>{{total_comments}} comment{{total_comments|pluralize}}</h5>  
+					  <h5><span id="prev-comment-count">{{total_comments}}</span> comment{{total_comments|pluralize}}</h5>  
 					{% endwith %}
 
-					{% for c in comments  %}
-						<div class="detail-comment mb-3">
-							<div class="post-comment parent-comment d-flex flex-row align-items-start">
-				               <img src="{{c.user.profile.user_photo.url}}" class="img-fluid user-photo">
-				               <p>
-								<span>{{c.user}}</span>
-								 {{c.body|safe}}
-								</p>
-				            </div>
-							<div class="reaction mb-2 ml-5">
-								<a href="javascript:void(0)" class="btn btn-claps btn-claps-sm vote-this {{c|is_user_upvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='up'>
-								{% include "snippets/claps-sm.svg" %}
-								</a><span id="up-{{c.id}}">{{c.upvotes}}</span>
-								
-								<a href='javascript:void(0)' class="btn btn-punch btn-punch-sm vote-this {{c|is_user_downvote:request}}" data-id="{{c.id}}" data-cat='comments' data-action='down'>
-									{% include "snippets/punch-sm.svg" %}
-								</a>
-								<span id="down-{{c.id}}">{{c.downvotes}}</span>
-								<a href='javascript:void(0)'data-reply-show="data-reply-{{c.pk}}" data-id="{{c.pk}}" class="show-data-reply"><span class="d-inline-block">&nbsp;<i class="fa fa-comments-o fa-lg"></i> {{c.comment_reply.all.count}} Balasan</span></a>
-								<a href='javascript:void(0)'data-form-show="form-reply-{{c.pk}}" class="show-form-reply">Balas</a>
-								
-							</div>
-							<!-- daftar reply-->
-								<div id="data-reply-{{c.pk}}" class="data-reply pl-5">
-								</div>
-								<!-- end daftar reply-->
-								<!-- form reply-->
-								<div id="form-reply-{{c.pk}}" class="d-none form-reply mt-2 pl-4">
-								<form method="post">
-									{% csrf_token %}
-									<input name="id_parent_comment" id="id_id_parent_comment" type="hidden" value={{c.pk}}>
-									<p>
-									<textarea name="body" class="form-control" placeholder="Berikan Komentar untuk Thread ini" id="id_body-{{c.pk}}"></textarea></p>
-									<div class="text-right">
-										<button type="submit" class="d-inline-block btn btn-orange mr-3">Balas</button>
-									</div>
-									
-								</form>
-								</div>
-								<!-- end form reply-->
-								<div class="hr-custom mt-2"></div>
-						</div>
-						{%empty%}
-						<p>Tidak ada komentar</p>
-					{% endfor %}
+					{% with comments as all_comment  %}
+					    {% include "batasibuk_forum/comments.html" %}
+					{% endwith %}
 					</div>
 
             	</div>
@@ -249,7 +207,7 @@
 			$('.data-reply').addClass('d-none')
 			set_ckeditor(data_form)
 			$.ajax({
-				type:'POST',
+				type:'GET',
 				url:'/api/get_replys/'+data_id,
 				data:{
 					csrfmiddlewaretoken:'{{csrf_token}}',
@@ -292,4 +250,60 @@
 	});
 	</script>
 	{% include "snippets/follow.html" %}
+	<script type="text/javascript">
+		function update_ckeditor_element(){
+			for(instance in CKEDITOR.instances){
+				CKEDITOR.instances[instance].updateElement()
+			}
+		}
+		function reset_ckeditor_content(){
+			for(instance in CKEDITOR.instances){
+				CKEDITOR.instances[instance].setData('',function(){
+					this.updateElement()
+				})
+			}
+		}
+
+		$(document).on('click','.form-comment',function(e){
+			target=e.target
+			if(target.dataset.action='submit-form'){
+				e.preventDefault()
+				update_ckeditor_element()
+				let body=$(this).find('textarea')
+				let parent=$(this).find('#id_id_parent_comment')
+				if(body.val().trim()){
+					$.ajax({
+						type:'POST',
+						url:'/ajax'+window.location.pathname,
+						data:$(this).serialize(),
+						success:function(data){
+							reset_ckeditor_content()
+							comment_count=$('#count-comment')
+							comment_now=Number(comment_count.text())+1
+							comment_count.text(comment_now)
+							$('#prev-comment-count').text(comment_now)
+							if(target.dataset.type=='comment'){
+								comment_append=$('#wrap-comments').append(data)
+								comment_append=comment_append.find('.detail-comment')
+								last=comment_append.length-1
+								$(document).scrollTop($(comment_append[last]).offset().top-80)
+								$('#none-comment').hide()
+							}else{
+								comment_append=$('#data-reply-'+parent.val()).append(data)
+								reply_count=$('#count-reply-'+parent.val())
+								reply_count_now=Number(reply_count.text())+1
+								reply_count.text(reply_count_now)
+								$('#none-reply').hide()
+							}
+							
+
+						}
+					})
+				}
+				
+			}else{
+				e.stopPropagation()
+			}
+		});
+	</script>
 {% endblock costum_js %}

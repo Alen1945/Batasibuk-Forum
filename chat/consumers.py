@@ -1,13 +1,16 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import Room,Message
+from .models import Room,Message,RoomMember
 from asgiref.sync import async_to_sync
 from batasibuk.utils.time_since import custom_time_since
+from django.contrib.auth.models import User
 
 
 def rooms_to_json(data,user):
 		result=[]
 		for d in data:
+			if not d.room_messages.all():
+				continue
 			result.append(room_to_json(d,user))
 		result=sorted(result,key=lambda r:r['last_msg_time'],reverse=True)
 		return result
@@ -100,15 +103,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		content={
 			'command':'fetch_message',
 			'request_user':self.scope['user'].username,
-			'messages':self.messages_to_json(messages),
 		}
-		for r in content['messages']:
-			r['time']=custom_time_since(r['time'])
-		if data.get('kind',False):
-			content['pre']=True
-			content['messages'].reverse()
-		if all_msg:
-			content['all_msg']=True
+		if messages:
+			content['messages']=self.messages_to_json(messages)
+			for r in content['messages']:
+				r['time']=custom_time_since(r['time'])
+			if data.get('kind',False):
+				content['pre']=True
+				content['messages'].reverse()
+			if all_msg:
+				content['all_msg']=True
+		else:
+			content['messages']=[]
 
 		await self.send(text_data=json.dumps(content))
 
@@ -170,20 +176,47 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		'fetch_messages':fetch_messages,
 		'new_message':new_message
 	}
+	async def create_room(self,user1,user2):
+		members=[user1,user2]
+		for r in Room.objects.all():
+			if r.room_members.filter(member=user1).exists() and r.room_members.filter(member=user2).exists():
+				room_id=r.pk
+				break
+		else:
+			room = Room(name='101', kind=1)
+			room.save()
+			RoomMember.objects.bulk_create([RoomMember(room=room, member=member) for member in members])
+			room_id=room.pk
+		await self.send(text_data=json.dumps({
+				'command':'redirect_socket',
+				'room_id':room_id,
+			}))
+
 	async def connect(self):
 		user=self.scope['user']
-		self.room_id=self.scope['url_route']['kwargs']['pk']
-		if not Room.objects.filter(pk=self.room_id).exists() or not Room.objects.filter(pk=self.room_id).first().room_members.filter(member=user).exists():
-			await self.accept()
-			await self.send(text_data=json.dumps({'close':'true'}))
+		self.status=self.scope['url_route']['kwargs']['status']
+		if self.status=='new':
+			pk_user=self.scope['url_route']['kwargs']['pk']
+			user1=self.scope['user']
+			user2=User.objects.filter(pk=pk_user).first()
+			if user:
+				await self.accept()
+				await self.create_room(user1,user2)
+			else:
+				return ''
+		else:
+			self.room_id=self.scope['url_route']['kwargs']['pk']
+			if not Room.objects.filter(pk=self.room_id).exists() or not Room.objects.filter(pk=self.room_id).first().room_members.filter(member=user).exists():
+				await self.accept()
+				await self.send(text_data=json.dumps({'close':'true'}))
 
-		self.room=Room.objects.filter(pk=self.room_id).first()
-		self.room_name=f'room_{self.room_id}'
-		await self.channel_layer.group_add(
-			self.room_name,
-			self.channel_name,
-			)
-		await self.accept()
+			self.room=Room.objects.filter(pk=self.room_id).first()
+			self.room_name=f'room_{self.room_id}'
+			await self.channel_layer.group_add(
+				self.room_name,
+				self.channel_name,
+				)	
+			await self.accept()
 
 	async def receive(self,text_data):
 		data=json.loads(text_data)

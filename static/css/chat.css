@@ -60,9 +60,34 @@
 .room-messages {
 	padding: 10px 10px;
 }
-
-
-
+.room-wraper .add-room{
+	position: relative;
+}
+.room-wraper .add-room .btn-custom{
+	border-radius: 50%;
+	margin-right: 35%;
+	margin-top: 25px;
+}
+.room-wraper .add-room .dropdown-menu{
+	left: 40px!important;
+	max-height: 250px;
+	max-width: 200px;
+	overflow: scroll;
+}
+.room-wraper .add-room .dropdown-menu>ul{
+	list-style: none;
+	padding-left: 10px;
+}
+.room-wraper .add-room .dropdown-menu>ul>li{
+	margin-bottom: 10px;
+}
+.room-wraper .add-room .dropdown-menu>ul>li a:hover,.room-wraper .add-room .dropdown-menu>ul>li a:focus{
+	text-decoration: none;
+}
+.room-wraper .add-room .dropdown-menu>ul>li img{
+	width: 30px;
+	height:30px;
+}
 .msg_head{
 	position: relative;
 	margin-bottom: 5px;

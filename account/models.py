@@ -20,7 +20,7 @@ def header_path(instance,header_name):
 Male=1
 Female=2
 class Profile(Followble):
-	user=models.OneToOneField(User,on_delete=models.CASCADE)
+	user=models.OneToOneField(User,related_name='profile',on_delete=models.CASCADE)
 	info=models.CharField(max_length=30,blank=True,default='Kreator Batasibuk')
 	date_of_birth=models.DateField(blank=True,null=True)
 	gender=models.IntegerField(choices=(
